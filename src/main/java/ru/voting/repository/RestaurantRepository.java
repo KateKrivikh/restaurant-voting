@@ -1,5 +1,6 @@
 package ru.voting.repository;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.voting.model.Restaurant;
@@ -8,6 +9,8 @@ import java.util.List;
 
 @Repository
 public class RestaurantRepository {
+    private static final Sort SORT_NAME = Sort.by(Sort.Direction.ASC, "name");
+
     private final CrudRestaurantRepository crudRepository;
 
     public RestaurantRepository(CrudRestaurantRepository crudRepository) {
@@ -15,7 +18,7 @@ public class RestaurantRepository {
     }
 
     public List<Restaurant> getAll() {
-        return crudRepository.getAll();
+        return crudRepository.findAll(SORT_NAME);
     }
 
     public Restaurant get(int id) {
