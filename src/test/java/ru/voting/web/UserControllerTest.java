@@ -4,35 +4,35 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
-import ru.voting.model.Dish;
+import ru.voting.model.User;
 import ru.voting.util.exception.NotFoundException;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.voting.DishTestData.*;
-import static ru.voting.RestaurantTestData.RESTAURANT_1_ID;
+import static ru.voting.UserTestData.*;
+
 
 @SpringJUnitWebConfig(locations = {
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-db.xml"
 })
 @Transactional
-class DishControllerTest {
+class UserControllerTest {
 
     @Autowired
-    private DishController controller;
+    private UserController controller;
 
     @Test
     void getAll() {
-        List<Dish> all = controller.getAll(RESTAURANT_1_ID, DATE);
-        DISH_MATCHER.assertMatch(all, DISH_1, DISH_3, DISH_2);
+        List<User> all = controller.getAll();
+        USER_MATCHER.assertMatch(all, ADMIN, USER);
     }
 
     @Test
     void get() {
-        Dish dish = controller.get(DISH_1_ID);
-        DISH_MATCHER.assertMatch(dish, DISH_1);
+        User user = controller.get(USER_ID);
+        USER_MATCHER.assertMatch(user, USER);
     }
 
     @Test
@@ -41,9 +41,20 @@ class DishControllerTest {
     }
 
     @Test
+    void getByEmail() {
+        User user = controller.getByEmail(USER_EMAIL);
+        USER_MATCHER.assertMatch(user, USER);
+    }
+
+    @Test
+    void getByEmailNotFound() {
+        assertThrows(NotFoundException.class, () -> controller.getByEmail("something"));
+    }
+
+    @Test
     void delete() {
-        controller.delete(DISH_1_ID);
-        assertThrows(NotFoundException.class, () -> controller.get(DISH_1_ID));
+        controller.delete(USER_ID);
+        assertThrows(NotFoundException.class, () -> controller.get(USER_ID));
     }
 
     @Test
@@ -53,25 +64,25 @@ class DishControllerTest {
 
     @Test
     void create() {
-        Dish newDish = getNew();
-        Dish created = controller.create(newDish);
+        User newUser = getNew();
+        User created = controller.create(newUser);
 
         int newId = created.id();
-        newDish.setId(newId);
-        DISH_MATCHER.assertMatch(created, newDish);
-        DISH_MATCHER.assertMatch(controller.get(newId), newDish);
+        newUser.setId(newId);
+        USER_MATCHER.assertMatch(created, newUser);
+        USER_MATCHER.assertMatch(controller.get(newId), newUser);
     }
 
     @Test
     void update() {
-        Dish updated = getUpdated();
+        User updated = getUpdated();
         controller.update(updated, updated.id());
-        DISH_MATCHER.assertMatch(controller.get(updated.id()), updated);
+        USER_MATCHER.assertMatch(controller.get(updated.id()), updated);
     }
 
     @Test
     void updateNotFound() {
-        Dish updated = getUpdated();
+        User updated = getUpdated();
         updated.setId(NOT_FOUND);
         controller.update(updated, updated.id());
         assertThrows(NotFoundException.class, () -> controller.get(updated.id()));
@@ -79,7 +90,7 @@ class DishControllerTest {
 
     @Test
     void updateNotConsistentId() {
-        Dish updated = getUpdated();
+        User updated = getUpdated();
         assertThrows(IllegalArgumentException.class, () -> controller.update(updated, NOT_FOUND));
     }
 }

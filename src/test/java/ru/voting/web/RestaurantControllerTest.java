@@ -25,18 +25,18 @@ class RestaurantControllerTest {
     @Test
     void getAll() {
         List<Restaurant> all = controller.getAll();
-        assertMatch(all, List.of(RESTAURANT_2, RESTAURANT_1));
+        RESTAURANT_MATCHER.assertMatch(all, RESTAURANT_2, RESTAURANT_1);
     }
 
     @Test
     void get() {
         Restaurant restaurant = controller.get(RESTAURANT_1_ID);
-        assertMatch(restaurant, RESTAURANT_1);
+        RESTAURANT_MATCHER.assertMatch(restaurant, RESTAURANT_1);
     }
 
     @Test
     void getNotFound() {
-        assertThrows(NotFoundException.class, () -> controller.get(RESTAURANT_NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> controller.get(NOT_FOUND));
     }
 
     @Test
@@ -47,7 +47,7 @@ class RestaurantControllerTest {
 
     @Test
     void deleteNotFound() {
-        assertThrows(NotFoundException.class, () -> controller.delete(RESTAURANT_NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> controller.delete(NOT_FOUND));
     }
 
     @Test
@@ -57,21 +57,21 @@ class RestaurantControllerTest {
 
         int newId = created.id();
         newRestaurant.setId(newId);
-        assertMatch(created, newRestaurant);
-        assertMatch(controller.get(newId), newRestaurant);
+        RESTAURANT_MATCHER.assertMatch(created, newRestaurant);
+        RESTAURANT_MATCHER.assertMatch(controller.get(newId), newRestaurant);
     }
 
     @Test
     void update() {
         Restaurant updated = getUpdated();
         controller.update(updated, updated.id());
-        assertMatch(controller.get(updated.id()), updated);
+        RESTAURANT_MATCHER.assertMatch(controller.get(updated.id()), updated);
     }
 
     @Test
     void updateNotFound() {
         Restaurant updated = getUpdated();
-        updated.setId(RESTAURANT_NOT_FOUND);
+        updated.setId(NOT_FOUND);
         controller.update(updated, updated.id());
         assertThrows(NotFoundException.class, () -> controller.get(updated.id()));
     }
@@ -79,6 +79,6 @@ class RestaurantControllerTest {
     @Test
     void updateNotConsistentId() {
         Restaurant updated = getUpdated();
-        assertThrows(IllegalArgumentException.class, () -> controller.update(updated, RESTAURANT_NOT_FOUND));
+        assertThrows(IllegalArgumentException.class, () -> controller.update(updated, NOT_FOUND));
     }
 }
