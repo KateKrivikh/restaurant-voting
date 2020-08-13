@@ -16,9 +16,9 @@ VALUES ('USER', 100000),
        ('ADMIN', 100001),
        ('USER', 100001);
 
-INSERT INTO restaurants (name, id)
-VALUES ('Tkemali', 100002),
-       ('Megobari', 100003);
+INSERT INTO restaurants (name)
+VALUES ('Tkemali'),
+       ('Megobari');
 
 INSERT INTO dishes (restaurant_id, date, name, price)
 VALUES (100002, '2020-08-20 00:00:00', 'Chicken, lamb or veal kebab', 620),
