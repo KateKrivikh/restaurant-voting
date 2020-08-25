@@ -1,7 +1,7 @@
-package ru.voting.web;
+package ru.voting.service;
 
 import org.slf4j.Logger;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.voting.model.Restaurant;
 import ru.voting.repository.RestaurantRepository;
@@ -11,13 +11,13 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.voting.util.ValidationUtil.*;
 
-@Controller
-public class RestaurantController {
-    private static final Logger log = getLogger(RestaurantController.class);
+@Service
+public class RestaurantService {
+    private static final Logger log = getLogger(RestaurantService.class);
 
     private final RestaurantRepository repository;
 
-    public RestaurantController(RestaurantRepository repository) {
+    public RestaurantService(RestaurantRepository repository) {
         this.repository = repository;
     }
 

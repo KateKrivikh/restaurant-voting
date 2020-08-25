@@ -10,6 +10,6 @@
        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
     <context:component-scan base-package="ru.voting.**.repository"/>
-    <context:component-scan base-package="ru.voting.**.web"/>
+    <context:component-scan base-package="ru.voting.**.service"/>
     <jpa:repositories base-package="ru.voting.**.repository"/>
 </beans>

@@ -1,7 +1,7 @@
-package ru.voting.web;
+package ru.voting.service;
 
 import org.slf4j.Logger;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.voting.model.User;
 import ru.voting.repository.UserRepository;
@@ -11,13 +11,13 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.voting.util.ValidationUtil.*;
 
-@Controller
-public class UserController {
-    private static final Logger log = getLogger(UserController.class);
+@Service
+public class UserService {
+    private static final Logger log = getLogger(UserService.class);
 
     private final UserRepository repository;
 
-    public UserController(UserRepository repository) {
+    public UserService(UserRepository repository) {
         this.repository = repository;
     }
 

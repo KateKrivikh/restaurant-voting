@@ -1,4 +1,4 @@
-package ru.voting.web;
+package ru.voting.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,68 +17,68 @@ import static ru.voting.RestaurantTestData.*;
         "classpath:spring/spring-db.xml"
 })
 @Transactional
-class RestaurantControllerTest {
+class RestaurantServiceTest {
 
     @Autowired
-    private RestaurantController controller;
+    private RestaurantService service;
 
     @Test
     void getAll() {
-        List<Restaurant> all = controller.getAll();
+        List<Restaurant> all = service.getAll();
         RESTAURANT_MATCHER.assertMatch(all, RESTAURANT_2, RESTAURANT_1);
     }
 
     @Test
     void get() {
-        Restaurant restaurant = controller.get(RESTAURANT_1_ID);
+        Restaurant restaurant = service.get(RESTAURANT_1_ID);
         RESTAURANT_MATCHER.assertMatch(restaurant, RESTAURANT_1);
     }
 
     @Test
     void getNotFound() {
-        assertThrows(NotFoundException.class, () -> controller.get(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND));
     }
 
     @Test
     void delete() {
-        controller.delete(RESTAURANT_1_ID);
-        assertThrows(NotFoundException.class, () -> controller.get(RESTAURANT_1_ID));
+        service.delete(RESTAURANT_1_ID);
+        assertThrows(NotFoundException.class, () -> service.get(RESTAURANT_1_ID));
     }
 
     @Test
     void deleteNotFound() {
-        assertThrows(NotFoundException.class, () -> controller.delete(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND));
     }
 
     @Test
     void create() {
         Restaurant newRestaurant = getNew();
-        Restaurant created = controller.create(newRestaurant);
+        Restaurant created = service.create(newRestaurant);
 
         int newId = created.id();
         newRestaurant.setId(newId);
         RESTAURANT_MATCHER.assertMatch(created, newRestaurant);
-        RESTAURANT_MATCHER.assertMatch(controller.get(newId), newRestaurant);
+        RESTAURANT_MATCHER.assertMatch(service.get(newId), newRestaurant);
     }
 
     @Test
     void update() {
         Restaurant updated = getUpdated();
-        controller.update(updated, updated.id());
-        RESTAURANT_MATCHER.assertMatch(controller.get(updated.id()), updated);
+        service.update(updated, updated.id());
+        RESTAURANT_MATCHER.assertMatch(service.get(updated.id()), updated);
     }
 
     @Test
     void updateNotFound() {
         Restaurant updated = getUpdated();
         updated.setId(NOT_FOUND);
-        controller.update(updated, updated.id());
-        assertThrows(NotFoundException.class, () -> controller.get(updated.id()));
+        service.update(updated, updated.id());
+        assertThrows(NotFoundException.class, () -> service.get(updated.id()));
     }
 
     @Test
     void updateNotConsistentId() {
         Restaurant updated = getUpdated();
-        assertThrows(IllegalArgumentException.class, () -> controller.update(updated, NOT_FOUND));
+        assertThrows(IllegalArgumentException.class, () -> service.update(updated, NOT_FOUND));
     }
 }
