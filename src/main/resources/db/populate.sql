@@ -27,3 +27,7 @@ VALUES (100002, '2020-08-20 00:00:00', 'Chicken, lamb or veal kebab', 620),
        (100003, '2020-08-20 00:00:00', 'Ajapsandali', 450),
        (100003, '2020-08-20 00:00:00', 'Chicken Satsivi', 470),
        (100003, '2020-08-20 00:00:00', 'Eggplant roll with walnut and spices', 460);
+
+INSERT INTO votes (date, user_id, restaurant_id)
+VALUES ('2020-08-20 00:00:00', 100000, 100003),
+       ('2020-08-20 00:00:00', 100001, 100003)
