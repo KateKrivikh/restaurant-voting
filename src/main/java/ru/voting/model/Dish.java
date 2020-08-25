@@ -14,7 +14,7 @@ public class Dish extends AbstractBaseEntity {
     private String name;
 
     @Column(name = "price", nullable = false)
-    private double price;
+    private int price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
@@ -23,7 +23,7 @@ public class Dish extends AbstractBaseEntity {
     public Dish() {
     }
 
-    public Dish(Integer id, LocalDate date, String name, double price, Restaurant restaurant) {
+    public Dish(Integer id, LocalDate date, String name, int price, Restaurant restaurant) {
         super(id);
         this.date = date;
         this.name = name;
@@ -47,11 +47,11 @@ public class Dish extends AbstractBaseEntity {
         this.name = name;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
