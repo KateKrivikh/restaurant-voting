@@ -1,9 +1,11 @@
 package ru.voting.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.voting.model.Dish;
@@ -12,8 +14,6 @@ import ru.voting.service.DishService;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
-
-//TODO getAll by date
 
 @RestController
 @RequestMapping(value = DishRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -24,8 +24,9 @@ public class DishRestController {
     private DishService service;
 
     @GetMapping
-    public List<Dish> getAll(@PathVariable int restaurant_id) {
-        return service.getAll(restaurant_id, LocalDate.now());
+    public List<Dish> getAll(@PathVariable int restaurant_id,
+                             @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return service.getAll(restaurant_id, date);
     }
 
     @GetMapping("/{id}")

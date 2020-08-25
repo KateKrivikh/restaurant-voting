@@ -26,7 +26,13 @@ class DishServiceTest {
     private DishService service;
 
     @Test
-    void getAll() {
+    void getAllToday() {
+        List<Dish> all = service.getAll(RESTAURANT_1_ID, null);
+        DISH_MATCHER.assertMatch(all);
+    }
+
+    @Test
+    void getAllByDate() {
         List<Dish> all = service.getAll(RESTAURANT_1_ID, DATE);
         DISH_MATCHER.assertMatch(all, DISH_1, DISH_3, DISH_2);
     }

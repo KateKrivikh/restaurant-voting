@@ -26,8 +26,18 @@ class DishRestControllerTest extends AbstractRestControllerTest {
     private DishService service;
 
     @Test
-    void getAll() throws Exception {
+    void getAllToday() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL, RESTAURANT_1_ID))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(DISH_MATCHER.contentJson());
+    }
+
+    @Test
+    void getAllByDate() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL, RESTAURANT_1_ID)
+                .param("date", "2020-08-20"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

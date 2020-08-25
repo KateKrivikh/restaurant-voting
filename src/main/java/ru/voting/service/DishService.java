@@ -1,6 +1,7 @@
 package ru.voting.service;
 
 import org.slf4j.Logger;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.voting.model.Dish;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static ru.voting.util.DateUtil.ifNullThenNow;
 import static ru.voting.util.ValidationUtil.*;
 
 @Service
@@ -22,9 +24,9 @@ public class DishService {
         this.repository = repository;
     }
 
-    public List<Dish> getAll(int restaurantId, LocalDate date) {
+    public List<Dish> getAll(int restaurantId, @Nullable LocalDate date) {
         log.info("getAll");
-        return repository.getAll(restaurantId, date);
+        return repository.getAll(restaurantId, ifNullThenNow(date));
     }
 
     public Dish get(int id, int restaurantId) {
