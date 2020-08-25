@@ -9,7 +9,7 @@ import static ru.voting.RestaurantTestData.RESTAURANT_2;
 import static ru.voting.model.AbstractBaseEntity.START_SEQ;
 
 public class DishTestData {
-    public static TestMatcher<Dish> DISH_MATCHER = TestMatcher.usingFieldByFieldAssertions(Dish.class);
+    public static TestMatcher<Dish> DISH_MATCHER = TestMatcher.usingFieldsWithIgnoringAssertions(Dish.class, "restaurant");
 
     public static final int NOT_FOUND = 10;
     public static final int DISH_1_ID = START_SEQ + 4;

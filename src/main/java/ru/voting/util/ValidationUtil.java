@@ -1,6 +1,7 @@
 package ru.voting.util;
 
 import ru.voting.model.AbstractBaseEntity;
+import ru.voting.util.exception.IllegalRequestDataException;
 import ru.voting.util.exception.NotFoundException;
 
 public class ValidationUtil {
@@ -27,7 +28,7 @@ public class ValidationUtil {
 
     public static void checkNew(AbstractBaseEntity bean) {
         if (!bean.isNew()) {
-            throw new IllegalArgumentException(bean + " must be new (id=null)");
+            throw new IllegalRequestDataException(bean + " must be new (id=null)");
         }
     }
 
@@ -35,7 +36,7 @@ public class ValidationUtil {
         if (bean.isNew()) {
             bean.setId(id);
         } else if (bean.id() != id) {
-            throw new IllegalArgumentException(bean + " must be with id=" + id);
+            throw new IllegalRequestDataException(bean + " must be with id=" + id);
         }
     }
 }

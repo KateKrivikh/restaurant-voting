@@ -65,12 +65,12 @@ class RestaurantRestControllerTest extends AbstractRestControllerTest {
     @Test
     void update() throws Exception {
         Restaurant updated = getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT_1_ID).contentType(MediaType.APPLICATION_JSON)
+        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT_1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
         RESTAURANT_MATCHER.assertMatch(service.get(RESTAURANT_1_ID), updated);
-
     }
 
     @Test

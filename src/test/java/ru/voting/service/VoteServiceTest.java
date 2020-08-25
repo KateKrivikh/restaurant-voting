@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 import ru.voting.model.Vote;
+import ru.voting.util.exception.IllegalRequestDataException;
 import ru.voting.util.exception.NotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,6 +61,6 @@ class VoteServiceTest {
     @Test
     void updateNotConsistentId() {
         Vote updated = getUpdated();
-        assertThrows(IllegalArgumentException.class, () -> service.update(updated, NOT_FOUND));
+        assertThrows(IllegalRequestDataException.class, () -> service.update(updated, NOT_FOUND));
     }
 }

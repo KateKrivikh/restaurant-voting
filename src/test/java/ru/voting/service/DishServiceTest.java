@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 import ru.voting.model.Dish;
+import ru.voting.util.exception.IllegalRequestDataException;
 import ru.voting.util.exception.NotFoundException;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.voting.DishTestData.*;
 import static ru.voting.RestaurantTestData.RESTAURANT_1_ID;
+import static ru.voting.RestaurantTestData.RESTAURANT_2;
 
 @SpringJUnitWebConfig(locations = {
         "classpath:spring/spring-app.xml",
@@ -31,55 +33,70 @@ class DishServiceTest {
 
     @Test
     void get() {
-        Dish dish = service.get(DISH_1_ID);
+        Dish dish = service.get(DISH_1_ID, RESTAURANT_1_ID);
         DISH_MATCHER.assertMatch(dish, DISH_1);
     }
 
     @Test
     void getNotFound() {
-        assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND, RESTAURANT_1_ID));
+    }
+
+    @Test
+    void getNotOwn() {
+        assertThrows(NotFoundException.class, () -> service.get(DISH_4.id(), RESTAURANT_1_ID));
     }
 
     @Test
     void delete() {
-        service.delete(DISH_1_ID);
-        assertThrows(NotFoundException.class, () -> service.get(DISH_1_ID));
+        service.delete(DISH_1_ID, RESTAURANT_1_ID);
+        assertThrows(NotFoundException.class, () -> service.get(DISH_1_ID, RESTAURANT_1_ID));
     }
 
     @Test
     void deleteNotFound() {
-        assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND, RESTAURANT_1_ID));
+    }
+
+    @Test
+    void deleteNotOwn() {
+        assertThrows(NotFoundException.class, () -> service.delete(DISH_4.id(), RESTAURANT_1_ID));
     }
 
     @Test
     void create() {
         Dish newDish = getNew();
-        Dish created = service.create(newDish);
+        Dish created = service.create(newDish, RESTAURANT_1_ID);
 
         int newId = created.id();
         newDish.setId(newId);
         DISH_MATCHER.assertMatch(created, newDish);
-        DISH_MATCHER.assertMatch(service.get(newId), newDish);
+        DISH_MATCHER.assertMatch(service.get(newId, RESTAURANT_1_ID), newDish);
     }
 
     @Test
     void update() {
         Dish updated = getUpdated();
-        service.update(updated, updated.id());
-        DISH_MATCHER.assertMatch(service.get(updated.id()), updated);
+        service.update(updated, updated.id(), RESTAURANT_1_ID);
+        DISH_MATCHER.assertMatch(service.get(updated.id(), RESTAURANT_1_ID), updated);
     }
 
     @Test
     void updateNotFound() {
         Dish updated = getUpdated();
         updated.setId(NOT_FOUND);
-        service.update(updated, updated.id());
-        assertThrows(NotFoundException.class, () -> service.get(updated.id()));
+        assertThrows(NotFoundException.class, () -> service.update(updated, updated.id(), RESTAURANT_1_ID));
     }
 
     @Test
     void updateNotConsistentId() {
         Dish updated = getUpdated();
-        assertThrows(IllegalArgumentException.class, () -> service.update(updated, NOT_FOUND));
+        assertThrows(IllegalRequestDataException.class, () -> service.update(updated, DISH_2.id(), RESTAURANT_1_ID));
+    }
+
+    @Test
+    void updateNotOwn() {
+        Dish updated = getUpdated();
+        assertThrows(NotFoundException.class, () -> service.update(updated, DISH_1_ID, RESTAURANT_2.id()));
     }
 }

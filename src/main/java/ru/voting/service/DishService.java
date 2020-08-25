@@ -27,27 +27,27 @@ public class DishService {
         return repository.getAll(restaurantId, date);
     }
 
-    public Dish get(int id) {
+    public Dish get(int id, int restaurantId) {
         log.info("get {}", id);
-        return checkNotFoundWithId(repository.get(id), id);
+        return checkNotFoundWithId(repository.get(id, restaurantId), id);
     }
 
-    public void delete(int id) {
+    public void delete(int id, int restaurantId) {
         log.info("delete {}", id);
-        checkNotFoundWithId(repository.delete(id), id);
+        checkNotFoundWithId(repository.delete(id, restaurantId), id);
     }
 
-    public Dish create(Dish dish) {
+    public Dish create(Dish dish, int restaurantId) {
         checkNew(dish);
         log.info("create {}", dish);
         Assert.notNull(dish, "dish must not be null");
-        return repository.save(dish);
+        return repository.save(dish, restaurantId);
     }
 
-    public void update(Dish dish, int id) {
+    public void update(Dish dish, int id, int restaurantId) {
         assureIdConsistent(dish, id);
         log.info("update {}", dish);
         Assert.notNull(dish, "dish must not be null");
-        checkNotFoundWithId(repository.save(dish), dish.id());
+        checkNotFoundWithId(repository.save(dish, restaurantId), dish.id());
     }
 }
