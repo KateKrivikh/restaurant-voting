@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.voting.model.Dish;
 import ru.voting.repository.DishRepository;
+import ru.voting.to.MenuTo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.voting.util.DateUtil.ifNullThenNow;
@@ -51,5 +53,15 @@ public class DishService {
         log.info("update {}", dish);
         Assert.notNull(dish, "dish must not be null");
         checkNotFoundWithId(repository.save(dish, restaurantId), dish.id());
+    }
+
+    //TODO cache
+    public List<MenuTo> getMenu(@Nullable LocalDate date) {
+        List<Dish> dishes = repository.getMenuByDate(ifNullThenNow(date));
+        return dishes.stream()
+                .collect(Collectors.groupingBy(Dish::getRestaurant, Collectors.toList()))
+                .entrySet().stream()
+                .map(e -> new MenuTo(e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
     }
 }

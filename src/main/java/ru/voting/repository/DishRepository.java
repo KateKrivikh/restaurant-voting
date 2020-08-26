@@ -18,7 +18,7 @@ public class DishRepository {
     }
 
     public List<Dish> getAll(int restaurantId, LocalDate date) {
-        return crudRepository.getAll(restaurantId, date);
+        return crudRepository.getAllByRestaurantAndDate(restaurantId, date);
     }
 
     public Dish get(int id, int restaurantId) {
@@ -36,5 +36,9 @@ public class DishRepository {
         }
         dish.setRestaurant(crudRestaurantRepository.getOne(restaurantId));
         return crudRepository.save(dish);
+    }
+
+    public List<Dish> getMenuByDate(LocalDate date) {
+        return crudRepository.getAllByDate(date);
     }
 }

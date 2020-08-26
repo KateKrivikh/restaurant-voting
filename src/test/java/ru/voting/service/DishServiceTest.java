@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 import ru.voting.model.Dish;
+import ru.voting.to.MenuTo;
 import ru.voting.util.exception.IllegalRequestDataException;
 import ru.voting.util.exception.NotFoundException;
 
@@ -13,7 +14,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.voting.DishTestData.*;
 import static ru.voting.RestaurantTestData.RESTAURANT_1_ID;
-import static ru.voting.RestaurantTestData.RESTAURANT_2;
 
 @SpringJUnitWebConfig(locations = {
         "classpath:spring/spring-app.xml",
@@ -103,6 +103,19 @@ class DishServiceTest {
     @Test
     void updateNotOwn() {
         Dish updated = getUpdated();
-        assertThrows(NotFoundException.class, () -> service.update(updated, DISH_1_ID, RESTAURANT_2.id()));
+        updated.setId(DISH_4.id());
+        assertThrows(NotFoundException.class, () -> service.update(updated, updated.id(), RESTAURANT_1_ID));
+    }
+
+    @Test
+    void getMenuToday() {
+        List<MenuTo> actual = service.getMenu(null);
+        MENU_MATCHER.assertMatch(actual, List.of());
+    }
+
+    @Test
+    void getMenuByDate() {
+        List<MenuTo> actual = service.getMenu(DATE);
+        MENU_MATCHER.assertMatch(actual, MENU);
     }
 }
