@@ -10,22 +10,20 @@ public class Vote extends AbstractBaseEntity {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id")
+    private int userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    private Restaurant restaurant;
+    @Column(name = "restaurant_id")
+    private int restaurantId;
 
     public Vote() {
     }
 
-    public Vote(Integer id, LocalDate date, User user, Restaurant restaurant) {
+    public Vote(Integer id, LocalDate date, int userId, int restaurantId) {
         super(id);
         this.date = date;
-        this.user = user;
-        this.restaurant = restaurant;
+        this.userId = userId;
+        this.restaurantId = restaurantId;
     }
 
     public LocalDate getDate() {
@@ -36,20 +34,20 @@ public class Vote extends AbstractBaseEntity {
         this.date = date;
     }
 
-    public User getUser() {
-        return user;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
+    public int getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
+    public void setRestaurantId(int restaurantId) {
+        this.restaurantId = restaurantId;
     }
 
     @Override
@@ -57,8 +55,8 @@ public class Vote extends AbstractBaseEntity {
         return "Vote{" +
                 "id=" + id +
                 ", date=" + date +
-                ", user=" + user +
-                ", restaurant=" + restaurant +
+                ", userId=" + userId +
+                ", restaurantId=" + restaurantId +
                 '}';
     }
 }

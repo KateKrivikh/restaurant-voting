@@ -3,6 +3,9 @@ package ru.voting.util;
 import ru.voting.model.AbstractBaseEntity;
 import ru.voting.util.exception.IllegalRequestDataException;
 import ru.voting.util.exception.NotFoundException;
+import ru.voting.util.exception.TooLateException;
+
+import java.time.LocalTime;
 
 public class ValidationUtil {
 
@@ -38,5 +41,10 @@ public class ValidationUtil {
         } else if (bean.id() != id) {
             throw new IllegalRequestDataException(bean + " must be with id=" + id);
         }
+    }
+
+    public static void checkTime(LocalTime barrierTime) {
+        if (LocalTime.now().isAfter(barrierTime))
+            throw new TooLateException();
     }
 }

@@ -18,6 +18,7 @@ public class DishTestData {
     public static final int DISH_1_ID = START_SEQ + 4;
 
     public static final LocalDate DATE = LocalDate.of(2020, 8, 20);
+    public static final LocalDate DATE_NOW = LocalDate.now();
 
     public static final Dish DISH_1 = new Dish(DISH_1_ID, DATE, "Chicken, lamb or veal kebab", 620, RESTAURANT_1);
     public static final Dish DISH_2 = new Dish(DISH_1_ID + 1, DATE, "Ojakhuri (roasted veal with potatoes served with tkemali sauce)", 650, RESTAURANT_1);

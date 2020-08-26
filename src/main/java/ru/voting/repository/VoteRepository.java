@@ -4,6 +4,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.voting.model.Vote;
 
+import java.time.LocalDate;
+
 @Repository
 public class VoteRepository {
     private final CrudVoteRepository crudRepository;
@@ -20,5 +22,9 @@ public class VoteRepository {
     @Transactional
     public Vote save(Vote vote) {
         return crudRepository.save(vote);
+    }
+
+    public Vote getByUserAndDate(int userId, LocalDate date) {
+        return crudRepository.getByUserAndDate(userId, date);
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
-import static ru.voting.util.DateUtil.ifNullThenNow;
+import static ru.voting.util.DateTimeUtil.ifNullThenNow;
 import static ru.voting.util.ValidationUtil.*;
 
 @Service
