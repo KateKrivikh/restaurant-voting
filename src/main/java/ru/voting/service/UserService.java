@@ -1,6 +1,8 @@
 package ru.voting.service;
 
 import org.slf4j.Logger;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.voting.model.User;
@@ -21,6 +23,7 @@ public class UserService {
         this.repository = repository;
     }
 
+    @Cacheable("users")
     public List<User> getAll() {
         log.info("getAll");
         return repository.getAll();
@@ -37,11 +40,13 @@ public class UserService {
         return checkNotFound(repository.getByEmail(email), "email=" + email);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public void delete(int id) {
         log.info("delete {}", id);
         checkNotFoundWithId(repository.delete(id), id);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public User create(User user) {
         checkNew(user);
         log.info("create {}", user);
@@ -49,6 +54,7 @@ public class UserService {
         return repository.save(user);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public void update(User user, int id) {
         assureIdConsistent(user, id);
         log.info("update {} with id={}", user, id);

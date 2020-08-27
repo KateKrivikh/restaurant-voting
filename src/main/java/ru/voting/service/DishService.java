@@ -1,6 +1,9 @@
 package ru.voting.service;
 
+import com.sun.istack.NotNull;
 import org.slf4j.Logger;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -36,11 +39,13 @@ public class DishService {
         return checkNotFoundWithId(repository.get(id, restaurantId), id);
     }
 
+    @CacheEvict(value = "menu", allEntries = true)
     public void delete(int id, int restaurantId) {
         log.info("delete {}", id);
         checkNotFoundWithId(repository.delete(id, restaurantId), id);
     }
 
+    @CacheEvict(value = "menu", key = "#dish.date")
     public Dish create(Dish dish, int restaurantId) {
         checkNew(dish);
         log.info("create {}", dish);
@@ -48,6 +53,7 @@ public class DishService {
         return repository.save(dish, restaurantId);
     }
 
+    @CacheEvict(value = "menu", key = "#dish.date")
     public void update(Dish dish, int id, int restaurantId) {
         assureIdConsistent(dish, id);
         log.info("update {}", dish);
@@ -55,8 +61,12 @@ public class DishService {
         checkNotFoundWithId(repository.save(dish, restaurantId), dish.id());
     }
 
-    //TODO cache
     public List<MenuTo> getMenu(@Nullable LocalDate date) {
+        return getMenuByDate(ifNullThenNow(date));
+    }
+
+    @Cacheable(value = "menu", key = "#date")
+    public List<MenuTo> getMenuByDate(@NotNull LocalDate date) {
         List<Dish> dishes = repository.getMenuByDate(ifNullThenNow(date));
         return dishes.stream()
                 .collect(Collectors.groupingBy(Dish::getRestaurant, Collectors.toList()))
