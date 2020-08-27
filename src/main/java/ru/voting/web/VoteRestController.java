@@ -23,7 +23,7 @@ public class VoteRestController {
 
     @PostMapping
     public ResponseEntity<Vote> createWithLocation(@RequestParam int restaurantId) {
-        Vote created = service.vote(restaurantId);
+        Vote created = service.vote(SecurityUtil.authUserId(), restaurantId);
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")

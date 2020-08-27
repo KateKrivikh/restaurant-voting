@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.voting.TestUtil.readFromJson;
+import static ru.voting.TestUtil.userHttpBasic;
 import static ru.voting.UserTestData.*;
 
 class UserRestControllerTest extends AbstractRestControllerTest {
@@ -27,7 +28,8 @@ class UserRestControllerTest extends AbstractRestControllerTest {
 
     @Test
     void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL))
+        perform(MockMvcRequestBuilders.get(REST_URL)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -36,7 +38,8 @@ class UserRestControllerTest extends AbstractRestControllerTest {
 
     @Test
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + USER_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + USER_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -46,21 +49,24 @@ class UserRestControllerTest extends AbstractRestControllerTest {
 
     @Test
     void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + NOT_FOUND))
+        perform(MockMvcRequestBuilders.get(REST_URL + NOT_FOUND)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + USER_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + USER_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class, () -> service.get(USER_ID));
     }
 
     @Test
     void deleteNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND))
+        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND)
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -68,6 +74,7 @@ class UserRestControllerTest extends AbstractRestControllerTest {
     void update() throws Exception {
         User updated = getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .with(userHttpBasic(ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
@@ -79,6 +86,7 @@ class UserRestControllerTest extends AbstractRestControllerTest {
     void createWithLocation() throws Exception {
         User newUser = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+                .with(userHttpBasic(ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newUser))
                 .content(UserTestData.jsonWithPassword(newUser, "newPass")));
@@ -93,7 +101,8 @@ class UserRestControllerTest extends AbstractRestControllerTest {
     @Test
     void getByEmail() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "/by")
-                .param("email", USER.getEmail()))
+                .param("email", USER.getEmail())
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -103,8 +112,22 @@ class UserRestControllerTest extends AbstractRestControllerTest {
     @Test
     void getByEmailNotFound() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "/by")
-                .param("email", "some_email@gmail.com"))
+                .param("email", "some_email@gmail.com")
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void getForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL)
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void getUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isUnauthorized());
     }
 }

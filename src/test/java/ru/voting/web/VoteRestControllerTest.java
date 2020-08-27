@@ -13,6 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.voting.RestaurantTestData.RESTAURANT_1_ID;
 import static ru.voting.RestaurantTestData.RESTAURANT_2;
 import static ru.voting.TestUtil.readFromJson;
+import static ru.voting.TestUtil.userHttpBasic;
+import static ru.voting.UserTestData.USER;
 import static ru.voting.VoteTestData.VOTE_MATCHER;
 import static ru.voting.VoteTestData.getNew;
 
@@ -27,6 +29,7 @@ class VoteRestControllerTest extends AbstractRestControllerTest {
         Vote newVote = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .param("restaurantId", String.valueOf(RESTAURANT_2.id()))
+                .with(userHttpBasic(USER))
                 .contentType(MediaType.APPLICATION_JSON));
 
         Vote created = readFromJson(action, Vote.class);
@@ -42,6 +45,7 @@ class VoteRestControllerTest extends AbstractRestControllerTest {
         newVote.setRestaurantId(RestaurantTestData.NOT_FOUND);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .param("restaurantId", String.valueOf(RestaurantTestData.NOT_FOUND))
+                .with(userHttpBasic(USER))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -51,6 +55,7 @@ class VoteRestControllerTest extends AbstractRestControllerTest {
         Vote newVote = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .param("restaurantId", String.valueOf(RESTAURANT_2.id()))
+                .with(userHttpBasic(USER))
                 .contentType(MediaType.APPLICATION_JSON));
         Vote created = readFromJson(action, Vote.class);
         int newId = created.id();
@@ -59,6 +64,7 @@ class VoteRestControllerTest extends AbstractRestControllerTest {
         newVote.setRestaurantId(RESTAURANT_1_ID);
         ResultActions actionUpdate = perform(MockMvcRequestBuilders.post(REST_URL)
                 .param("restaurantId", String.valueOf(RESTAURANT_1_ID))
+                .with(userHttpBasic(USER))
                 .contentType(MediaType.APPLICATION_JSON));
         Vote updated = readFromJson(actionUpdate, Vote.class);
 
@@ -71,6 +77,7 @@ class VoteRestControllerTest extends AbstractRestControllerTest {
         Vote newVote = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .param("restaurantId", String.valueOf(RESTAURANT_2.id()))
+                .with(userHttpBasic(USER))
                 .contentType(MediaType.APPLICATION_JSON));
         Vote created = readFromJson(action, Vote.class);
         int newId = created.id();
@@ -79,7 +86,15 @@ class VoteRestControllerTest extends AbstractRestControllerTest {
         newVote.setRestaurantId(RestaurantTestData.NOT_FOUND);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .param("restaurantId", String.valueOf(RestaurantTestData.NOT_FOUND))
+                .with(userHttpBasic(USER))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void getUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .param("restaurantId", String.valueOf(RESTAURANT_1_ID)))
+                .andExpect(status().isUnauthorized());
     }
 }

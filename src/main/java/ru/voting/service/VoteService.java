@@ -8,7 +8,6 @@ import ru.voting.model.Vote;
 import ru.voting.repository.RestaurantRepository;
 import ru.voting.repository.VoteRepository;
 import ru.voting.util.exception.NotFoundException;
-import ru.voting.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -57,12 +56,11 @@ public class VoteService {
                 "vote is not found by userId = " + userId + " and date = " + date);
     }
 
-    public Vote vote(int restaurantId) {
-        return vote(restaurantId, BARRIER_TIME);
+    public Vote vote(int userId, int restaurantId) {
+        return vote(userId, restaurantId, BARRIER_TIME);
     }
 
-    public Vote vote(int restaurantId, @NotNull LocalTime barrierTime) {
-        int userId = SecurityUtil.authUserId();
+    public Vote vote(int userId, int restaurantId, @NotNull LocalTime barrierTime) {
         LocalDate date = ifNullThenNow(null);
 
         try {

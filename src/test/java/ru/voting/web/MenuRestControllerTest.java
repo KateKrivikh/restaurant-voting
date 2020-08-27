@@ -11,13 +11,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.voting.DishTestData.MENU;
 import static ru.voting.DishTestData.MENU_MATCHER;
+import static ru.voting.TestUtil.userHttpBasic;
+import static ru.voting.UserTestData.USER;
 
 class MenuRestControllerTest extends AbstractRestControllerTest {
     private static final String REST_URL = MenuRestController.REST_URL + '/';
 
     @Test
     void getAllToday() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL))
+        perform(MockMvcRequestBuilders.get(REST_URL)
+                .with(userHttpBasic(USER)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -27,10 +30,17 @@ class MenuRestControllerTest extends AbstractRestControllerTest {
     @Test
     void getAllByDate() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
-                .param("date", "2020-08-20"))
+                .param("date", "2020-08-20")
+                .with(userHttpBasic(USER)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MENU_MATCHER.contentJson(MENU));
+    }
+
+    @Test
+    void getUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isUnauthorized());
     }
 }

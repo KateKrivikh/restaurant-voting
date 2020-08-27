@@ -100,7 +100,7 @@ class VoteServiceTest {
     @Test
     void voteFirstTime() {
         Vote newVote = getNew();
-        Vote voted = service.vote(newVote.getRestaurantId());
+        Vote voted = service.vote(USER_ID, newVote.getRestaurantId());
 
         int newId = voted.id();
         newVote.setId(newId);
@@ -112,20 +112,20 @@ class VoteServiceTest {
     void voteFirstTimeRestaurantNotFound() {
         Vote newVote = getNew();
         newVote.setRestaurantId(RestaurantTestData.NOT_FOUND);
-        assertThrows(NotFoundException.class, () -> service.vote(newVote.getRestaurantId()));
+        assertThrows(NotFoundException.class, () -> service.vote(USER_ID, newVote.getRestaurantId()));
     }
 
     @Test
     void voteSecondTimeBeforeBarrier() {
         // first time
         Vote newVote = getNew();
-        Vote voted = service.vote(newVote.getRestaurantId());
+        Vote voted = service.vote(USER_ID, newVote.getRestaurantId());
         int newId = voted.id();
         newVote.setId(newId);
 
         // second time: restaurant is changed
         newVote.setRestaurantId(RESTAURANT_1_ID);
-        voted = service.vote(newVote.getRestaurantId());
+        voted = service.vote(USER_ID, newVote.getRestaurantId());
 
         VOTE_MATCHER.assertMatch(voted, newVote);
         VOTE_MATCHER.assertMatch(service.get(newId), newVote);
@@ -135,25 +135,25 @@ class VoteServiceTest {
     void voteSecondTimeBeforeBarrierRestaurantNotFound() {
         // first time
         Vote newVote = getNew();
-        Vote voted = service.vote(newVote.getRestaurantId());
+        Vote voted = service.vote(USER_ID, newVote.getRestaurantId());
         int newId = voted.id();
         newVote.setId(newId);
 
         // second time: restaurant is unknown
         newVote.setRestaurantId(RestaurantTestData.NOT_FOUND);
-        assertThrows(NotFoundException.class, () -> service.vote(newVote.getRestaurantId()));
+        assertThrows(NotFoundException.class, () -> service.vote(USER_ID, newVote.getRestaurantId()));
     }
 
     @Test
     void voteSecondTimeAfterBarrier() {
         // first time
         Vote newVote = getNew();
-        Vote voted = service.vote(newVote.getRestaurantId());
+        Vote voted = service.vote(USER_ID, newVote.getRestaurantId());
         int newId = voted.id();
         newVote.setId(newId);
 
         // second time: restaurant is changed
         newVote.setRestaurantId(RESTAURANT_1_ID);
-        assertThrows(TooLateException.class, () -> service.vote(newVote.getRestaurantId(), LocalTime.of(0, 0)));
+        assertThrows(TooLateException.class, () -> service.vote(USER_ID, newVote.getRestaurantId(), LocalTime.of(0, 0)));
     }
 }

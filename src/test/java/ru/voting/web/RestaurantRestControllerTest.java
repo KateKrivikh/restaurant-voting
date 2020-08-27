@@ -16,6 +16,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.voting.RestaurantTestData.*;
 import static ru.voting.TestUtil.readFromJson;
+import static ru.voting.TestUtil.userHttpBasic;
+import static ru.voting.UserTestData.ADMIN;
+import static ru.voting.UserTestData.USER;
 
 class RestaurantRestControllerTest extends AbstractRestControllerTest {
 
@@ -26,7 +29,8 @@ class RestaurantRestControllerTest extends AbstractRestControllerTest {
 
     @Test
     void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL))
+        perform(MockMvcRequestBuilders.get(REST_URL)
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -35,7 +39,8 @@ class RestaurantRestControllerTest extends AbstractRestControllerTest {
 
     @Test
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT_1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT_1_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -44,21 +49,24 @@ class RestaurantRestControllerTest extends AbstractRestControllerTest {
 
     @Test
     void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + NOT_FOUND))
+        perform(MockMvcRequestBuilders.get(REST_URL + NOT_FOUND)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT_1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT_1_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class, () -> service.get(RESTAURANT_1_ID));
     }
 
     @Test
     void deleteNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND))
+        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND)
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -66,6 +74,7 @@ class RestaurantRestControllerTest extends AbstractRestControllerTest {
     void update() throws Exception {
         Restaurant updated = getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT_1_ID)
+                .with(userHttpBasic(ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
@@ -77,6 +86,7 @@ class RestaurantRestControllerTest extends AbstractRestControllerTest {
     void createWithLocation() throws Exception {
         Restaurant newMeal = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+                .with(userHttpBasic(ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newMeal)));
 
@@ -85,5 +95,18 @@ class RestaurantRestControllerTest extends AbstractRestControllerTest {
         newMeal.setId(newId);
         RESTAURANT_MATCHER.assertMatch(created, newMeal);
         RESTAURANT_MATCHER.assertMatch(service.get(newId), newMeal);
+    }
+
+    @Test
+    void getForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL)
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void getUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isUnauthorized());
     }
 }

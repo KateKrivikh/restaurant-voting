@@ -3,24 +3,34 @@ package ru.voting.service;
 import org.slf4j.Logger;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import ru.voting.AuthorizedUser;
 import ru.voting.model.User;
 import ru.voting.repository.UserRepository;
 
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static ru.voting.util.UserUtil.prepareToSave;
 import static ru.voting.util.ValidationUtil.*;
 
-@Service
-public class UserService {
+@Service("userService")
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
+public class UserService implements UserDetailsService {
     private static final Logger log = getLogger(UserService.class);
 
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Cacheable("users")
@@ -51,7 +61,7 @@ public class UserService {
         checkNew(user);
         log.info("create {}", user);
         Assert.notNull(user, "user must not be null");
-        return repository.save(user);
+        return prepareAndSave(user);
     }
 
     @CacheEvict(value = "users", allEntries = true)
@@ -59,6 +69,19 @@ public class UserService {
         assureIdConsistent(user, id);
         log.info("update {} with id={}", user, id);
         Assert.notNull(user, "user must not be null");
-        checkNotFoundWithId(repository.save(user), user.id());
+        checkNotFoundWithId(prepareAndSave(user), user.id());
+    }
+
+    @Override
+    public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = repository.getByEmail(email.toLowerCase());
+        if (user == null) {
+            throw new UsernameNotFoundException("User " + email + " is not found");
+        }
+        return new AuthorizedUser(user);
+    }
+
+    private User prepareAndSave(User user) {
+        return repository.save(prepareToSave(user, passwordEncoder));
     }
 }
