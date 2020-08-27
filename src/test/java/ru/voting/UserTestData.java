@@ -2,13 +2,14 @@ package ru.voting;
 
 import ru.voting.model.Role;
 import ru.voting.model.User;
+import ru.voting.web.json.JsonUtil;
 
 import java.util.Collections;
 
 import static ru.voting.model.AbstractBaseEntity.START_SEQ;
 
 public class UserTestData {
-    public static TestMatcher<User> USER_MATCHER = TestMatcher.usingFieldByFieldAssertions(User.class);
+    public static TestMatcher<User> USER_MATCHER = TestMatcher.usingFieldsWithIgnoringAssertions(User.class, "password");
 
     public static final int NOT_FOUND = 10;
     public static final int USER_ID = START_SEQ;
@@ -28,5 +29,9 @@ public class UserTestData {
         updated.setName("UpdatedName");
         updated.setRoles(Collections.singletonList(Role.ADMIN));
         return updated;
+    }
+
+    public static String jsonWithPassword(User user, String password) {
+        return JsonUtil.writeAdditionProps(user, "password", password);
     }
 }

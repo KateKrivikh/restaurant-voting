@@ -1,5 +1,6 @@
 package ru.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
@@ -18,6 +19,8 @@ public class User extends AbstractBaseEntity {
     private String email;
 
     @Column(name = "password", nullable = false)
+    // https://stackoverflow.com/a/12505165/548473
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Enumerated(EnumType.STRING)
