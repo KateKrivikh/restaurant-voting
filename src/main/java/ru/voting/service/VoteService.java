@@ -62,6 +62,7 @@ public class VoteService {
 
     public Vote vote(int userId, int restaurantId, @NotNull LocalTime barrierTime) {
         LocalDate date = ifNullThenNow(null);
+        log.info("vote user {} on date {} for restaurant {}", userId, date, restaurantId);
 
         try {
             Vote vote = getByUserAndDate(userId, date);

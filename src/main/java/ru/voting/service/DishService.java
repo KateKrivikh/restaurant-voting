@@ -67,7 +67,8 @@ public class DishService {
 
     @Cacheable(value = "menu", key = "#date")
     public List<MenuTo> getMenuByDate(@NotNull LocalDate date) {
-        List<Dish> dishes = repository.getMenuByDate(ifNullThenNow(date));
+        log.info("get menu by date {}", date);
+        List<Dish> dishes = repository.getMenuByDate(date);
         return dishes.stream()
                 .collect(Collectors.groupingBy(Dish::getRestaurant, Collectors.toList()))
                 .entrySet().stream()
