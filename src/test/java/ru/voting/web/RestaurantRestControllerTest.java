@@ -161,4 +161,15 @@ class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andExpect(errorType(VALIDATION_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_RESTAURANT_NAME));
     }
+
+    @Test
+    void updateHtmlUnsafe() throws Exception {
+        Restaurant invalid = new Restaurant(null, "<script>alert(123)</script>");
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(invalid))
+                .with(userHttpBasic(ADMIN)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
 }

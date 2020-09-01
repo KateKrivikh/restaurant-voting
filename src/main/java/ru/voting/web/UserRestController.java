@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.voting.View;
 import ru.voting.model.User;
 import ru.voting.service.UserService;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -39,12 +40,12 @@ public class UserRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody User user, @PathVariable int id) {
+    public void update(@Validated(View.Rest.class) @RequestBody User user, @PathVariable int id) {
         service.update(user, id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
+    public ResponseEntity<User> createWithLocation(@Validated(View.Rest.class) @RequestBody User user) {
         User created = service.create(user);
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()

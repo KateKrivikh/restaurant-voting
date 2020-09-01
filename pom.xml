@@ -24,6 +24,7 @@
         <!-- ORM -->
         <hibernate.version>5.4.18.Final</hibernate.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
+        <jsoup.version>1.13.1</jsoup.version>
 
         <javax-el.version>3.0.1-b11</javax-el.version>
 
@@ -116,6 +117,11 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jcache</artifactId>
             <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
         </dependency>
 
         <!--http://hibernate.org/validator/documentation/getting-started/#unified-expression-language-el-->

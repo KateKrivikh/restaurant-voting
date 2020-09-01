@@ -6,12 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.voting.View;
 import ru.voting.model.Dish;
 import ru.voting.service.DishService;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -43,12 +44,12 @@ public class DishRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Dish dish, @PathVariable int restaurant_id, @PathVariable int id) {
+    public void update(@Validated(View.Rest.class) @RequestBody Dish dish, @PathVariable int restaurant_id, @PathVariable int id) {
         service.update(dish, id, restaurant_id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody Dish dish, @PathVariable int restaurant_id) {
+    public ResponseEntity<Dish> createWithLocation(@Validated(View.Rest.class) @RequestBody Dish dish, @PathVariable int restaurant_id) {
         Dish created = service.create(dish, restaurant_id);
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()

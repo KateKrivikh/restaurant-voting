@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.util.CollectionUtils;
+import ru.voting.View;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,6 +16,8 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
 
+import static org.hibernate.validator.constraints.SafeHtml.WhiteListType.NONE;
+
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"}, name = "users_unique_email_idx")})
@@ -22,12 +26,14 @@ public class User extends AbstractBaseEntity {
     @Column(name = "name", nullable = false)
     @NotBlank
     @Size(min = 2, max = 100)
+    @SafeHtml(groups = {View.Rest.class}, whitelistType = NONE)
     private String name;
 
     @Column(name = "email", nullable = false, unique = true)
     @NotBlank
     @Email
     @Size(max = 100)
+    @SafeHtml(groups = {View.Rest.class}, whitelistType = NONE)
     private String email;
 
     @Column(name = "password", nullable = false)

@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.voting.View;
 import ru.voting.model.Restaurant;
 import ru.voting.service.RestaurantService;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -39,12 +40,12 @@ public class RestaurantRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
+    public void update(@Validated(View.Rest.class) @RequestBody Restaurant restaurant, @PathVariable int id) {
         service.update(restaurant, id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> createWithLocation(@Validated(View.Rest.class) @RequestBody Restaurant restaurant) {
         Restaurant created = service.create(restaurant);
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
