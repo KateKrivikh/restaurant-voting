@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.voting.util.ValidationUtil;
-import ru.voting.util.exception.ErrorInfo;
-import ru.voting.util.exception.ErrorType;
+import ru.voting.util.exception.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -27,15 +26,15 @@ import static ru.voting.util.exception.ErrorType.*;
 public class ExceptionInfoHandler {
     private static final Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
-    public static final String EXCEPTION_DUPLICATE_EMAIL = "User with this email already exists";
+    public static final String EXCEPTION_DUPLICATE_USER_EMAIL = "User with this email already exists";
     public static final String EXCEPTION_DUPLICATE_RESTAURANT_NAME = "Restaurant with this name already exists";
-    public static final String EXCEPTION_DUPLICATE_DISH_NAME = "Dish with this name for this restaurant on this date already exists";
+    public static final String EXCEPTION_DUPLICATE_DISH = "Dish with this name for this restaurant on this date already exists";
     public static final String EXCEPTION_DUPLICATE_VOTE = "User is already voted for this date";
 
     private static final Map<String, String> CONSTRAINS_MAP = Map.of(
-            "users_unique_email_idx", EXCEPTION_DUPLICATE_EMAIL,
+            "users_unique_email_idx", EXCEPTION_DUPLICATE_USER_EMAIL,
             "restaurants_unique_name_idx", EXCEPTION_DUPLICATE_RESTAURANT_NAME,
-            "dishes_unique_date_restaurant_name_idx", EXCEPTION_DUPLICATE_DISH_NAME,
+            "dishes_unique_date_restaurant_name_idx", EXCEPTION_DUPLICATE_DISH,
             "votes_unique_date_user_idx", EXCEPTION_DUPLICATE_VOTE);
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
@@ -63,6 +62,12 @@ public class ExceptionInfoHandler {
                 }
             }
         }
+        return logAndGetErrorInfo(req, e, true, DATA_ERROR);
+    }
+
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(VoteUnprocessableException.class)
+    public ErrorInfo handleError(HttpServletRequest req, VoteUnprocessableException e) {
         return logAndGetErrorInfo(req, e, true, DATA_ERROR);
     }
 

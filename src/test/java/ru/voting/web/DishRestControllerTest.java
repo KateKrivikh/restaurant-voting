@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.voting.model.Dish;
 import ru.voting.service.DishService;
 import ru.voting.util.exception.NotFoundException;
@@ -15,11 +17,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.voting.DishTestData.*;
+import static ru.voting.RestaurantTestData.RESTAURANT_1;
 import static ru.voting.RestaurantTestData.RESTAURANT_1_ID;
 import static ru.voting.TestUtil.readFromJson;
 import static ru.voting.TestUtil.userHttpBasic;
 import static ru.voting.UserTestData.ADMIN;
 import static ru.voting.UserTestData.USER;
+import static ru.voting.util.exception.ErrorType.VALIDATION_ERROR;
+import static ru.voting.web.ExceptionInfoHandler.EXCEPTION_DUPLICATE_DISH;
 
 class DishRestControllerTest extends AbstractRestControllerTest {
 
@@ -167,5 +172,53 @@ class DishRestControllerTest extends AbstractRestControllerTest {
     void getUnAuth() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL, RESTAURANT_1_ID))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void createInvalid() throws Exception {
+        Dish invalid = new Dish(null, null, null, 0, RESTAURANT_1);
+        perform(MockMvcRequestBuilders.post(REST_URL, RESTAURANT_1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(invalid))
+                .with(userHttpBasic(ADMIN)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    void updateInvalid() throws Exception {
+        Dish invalid = new Dish(DISH_1_ID, null, null, 0, RESTAURANT_1);
+        perform(MockMvcRequestBuilders.put(REST_URL + DISH_1_ID, RESTAURANT_1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(invalid))
+                .with(userHttpBasic(ADMIN)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void createDuplicate() throws Exception {
+        Dish duplicate = new Dish(null, DISH_1.getDate(), DISH_1.getName(), 100, RESTAURANT_1);
+        perform(MockMvcRequestBuilders.post(REST_URL, RESTAURANT_1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(duplicate))
+                .with(userHttpBasic(ADMIN)))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(detailMessage(EXCEPTION_DUPLICATE_DISH));
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void updateDuplicate() throws Exception {
+        Dish duplicate = new Dish(DISH_2.id(), DISH_1.getDate(), DISH_1.getName(), 100, RESTAURANT_1);
+        perform(MockMvcRequestBuilders.put(REST_URL + DISH_2.id(), RESTAURANT_1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(duplicate))
+                .with(userHttpBasic(ADMIN)))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(detailMessage(EXCEPTION_DUPLICATE_DISH));
     }
 }
