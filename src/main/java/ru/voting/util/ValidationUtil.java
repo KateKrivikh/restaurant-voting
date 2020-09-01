@@ -1,10 +1,13 @@
 package ru.voting.util;
 
+import org.slf4j.Logger;
 import ru.voting.model.AbstractBaseEntity;
+import ru.voting.util.exception.ErrorType;
 import ru.voting.util.exception.IllegalRequestDataException;
 import ru.voting.util.exception.NotFoundException;
 import ru.voting.util.exception.TooLateException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalTime;
 
 public class ValidationUtil {
@@ -46,5 +49,26 @@ public class ValidationUtil {
     public static void checkTime(LocalTime barrierTime) {
         if (LocalTime.now().isAfter(barrierTime))
             throw new TooLateException();
+    }
+
+    //  http://stackoverflow.com/a/28565320/548473
+    public static Throwable getRootCause(Throwable t) {
+        Throwable result = t;
+        Throwable cause;
+
+        while (null != (cause = result.getCause()) && (result != cause)) {
+            result = cause;
+        }
+        return result;
+    }
+
+    public static Throwable logAndGetRootCause(Logger log, HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
+        Throwable rootCause = getRootCause(e);
+        if (logException) {
+            log.error(errorType + " at request " + req.getRequestURL(), rootCause);
+        } else {
+            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
+        }
+        return rootCause;
     }
 }

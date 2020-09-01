@@ -4,11 +4,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "restaurants", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "restaurants_unique_name_idx")})
 public class Restaurant extends AbstractBaseEntity {
     @Column(name = "name", nullable = false, unique = true)
+    @NotBlank
+    @Size(min = 2, max = 100)
     private String name;
 
     public Restaurant() {

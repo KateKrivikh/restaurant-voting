@@ -1,6 +1,9 @@
 package ru.voting.model;
 
+import ru.voting.View;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
@@ -8,12 +11,15 @@ import java.time.LocalDate;
 public class Vote extends AbstractBaseEntity {
 
     @Column(name = "date", nullable = false)
+    @NotNull
     private LocalDate date;
 
     @Column(name = "user_id")
+    @NotNull(groups = View.Persist.class)
     private int userId;
 
     @Column(name = "restaurant_id")
+    @NotNull(groups = View.Persist.class)
     private int restaurantId;
 
     public Vote() {

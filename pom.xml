@@ -23,6 +23,7 @@
 
         <!-- ORM -->
         <hibernate.version>5.4.18.Final</hibernate.version>
+        <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
 
         <!--Cache-->
         <ehcache.version>3.8.1</ehcache.version>
@@ -101,6 +102,11 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>

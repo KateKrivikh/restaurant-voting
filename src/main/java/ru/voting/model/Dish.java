@@ -1,8 +1,13 @@
 package ru.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.validator.constraints.Range;
+import ru.voting.View;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity
@@ -10,17 +15,22 @@ import java.time.LocalDate;
 public class Dish extends AbstractBaseEntity {
 
     @Column(name = "date", nullable = false)
+    @NotNull
     private LocalDate date;
 
     @Column(name = "name", nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 150)
     private String name;
 
     @Column(name = "price", nullable = false)
+    @Range(min = 10, max = 10000)
     private int price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @JsonBackReference
+    @NotNull(groups = View.Persist.class)
     private Restaurant restaurant;
 
     public Dish() {
