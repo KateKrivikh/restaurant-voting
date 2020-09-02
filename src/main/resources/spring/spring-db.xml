@@ -18,7 +18,7 @@
           p:username="${database.username}"
           p:password="${database.password}"/>
 
-    <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
+    <jdbc:initialize-database enabled="${database.init}">
         <jdbc:script location="${jdbc.initLocation}"/>
         <jdbc:script encoding="utf-8" location="classpath:db/populate.sql"/>
     </jdbc:initialize-database>
