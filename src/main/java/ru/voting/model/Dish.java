@@ -2,30 +2,19 @@ package ru.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.Range;
-import org.hibernate.validator.constraints.SafeHtml;
 import ru.voting.View;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
-
-import static org.hibernate.validator.constraints.SafeHtml.WhiteListType.NONE;
 
 @Entity
 @Table(name = "dishes", uniqueConstraints = {@UniqueConstraint(columnNames = {"date", "restaurant_id", "name"}, name = "dishes_unique_date_restaurant_name_idx")})
-public class Dish extends AbstractBaseEntity {
+public class Dish extends AbstractNamedEntity {
 
     @Column(name = "date", nullable = false)
     @NotNull
     private LocalDate date;
-
-    @Column(name = "name", nullable = false)
-    @NotBlank
-    @Size(min = 2, max = 150)
-    @SafeHtml(groups = {View.Rest.class}, whitelistType = NONE)
-    private String name;
 
     @Column(name = "price", nullable = false)
     @Range(min = 10, max = 10000)
@@ -41,9 +30,8 @@ public class Dish extends AbstractBaseEntity {
     }
 
     public Dish(Integer id, LocalDate date, String name, int price, Restaurant restaurant) {
-        super(id);
+        super(id, name);
         this.date = date;
-        this.name = name;
         this.price = price;
         this.restaurant = restaurant;
     }
@@ -54,14 +42,6 @@ public class Dish extends AbstractBaseEntity {
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getPrice() {
@@ -84,8 +64,8 @@ public class Dish extends AbstractBaseEntity {
     public String toString() {
         return "Dish{" +
                 "id=" + id +
-                ", date=" + date +
                 ", name='" + name + '\'' +
+                ", date=" + date +
                 ", price=" + price +
                 '}';
     }

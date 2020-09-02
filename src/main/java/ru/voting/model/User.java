@@ -21,13 +21,7 @@ import static org.hibernate.validator.constraints.SafeHtml.WhiteListType.NONE;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"}, name = "users_unique_email_idx")})
-public class User extends AbstractBaseEntity {
-
-    @Column(name = "name", nullable = false)
-    @NotBlank
-    @Size(min = 2, max = 100)
-    @SafeHtml(groups = {View.Rest.class}, whitelistType = NONE)
-    private String name;
+public class User extends AbstractNamedEntity {
 
     @Column(name = "email", nullable = false, unique = true)
     @NotBlank
@@ -56,8 +50,7 @@ public class User extends AbstractBaseEntity {
     }
 
     public User(Integer id, String name, String email, String password, Collection<Role> roles) {
-        super(id);
-        this.name = name;
+        super(id, name);
         this.email = email;
         this.password = password;
         setRoles(roles);
@@ -65,14 +58,6 @@ public class User extends AbstractBaseEntity {
 
     public User(Integer id, String name, String email, String password, Role role, Role... roles) {
         this(id, name, email, password, EnumSet.of(role, roles));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getEmail() {
