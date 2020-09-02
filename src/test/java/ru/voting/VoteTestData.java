@@ -9,7 +9,7 @@ import static ru.voting.UserTestData.*;
 import static ru.voting.model.AbstractBaseEntity.START_SEQ;
 
 public class VoteTestData {
-    public static TestMatcher<Vote> VOTE_MATCHER = TestMatcher.usingFieldByFieldAssertions(Vote.class);
+    public static final TestMatcher<Vote> VOTE_MATCHER = TestMatcher.usingFieldByFieldAssertions(Vote.class);
 
     public static final int NOT_FOUND = 10;
     public static final int VOTE_1_ID = START_SEQ + 10;

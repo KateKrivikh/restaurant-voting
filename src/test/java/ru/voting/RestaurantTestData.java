@@ -5,7 +5,7 @@ import ru.voting.model.Restaurant;
 import static ru.voting.model.AbstractBaseEntity.START_SEQ;
 
 public class RestaurantTestData {
-    public static TestMatcher<Restaurant> RESTAURANT_MATCHER = TestMatcher.usingFieldByFieldAssertions(Restaurant.class);
+    public static final TestMatcher<Restaurant> RESTAURANT_MATCHER = TestMatcher.usingFieldByFieldAssertions(Restaurant.class);
 
     public static final int NOT_FOUND = 10;
     public static final int RESTAURANT_1_ID = START_SEQ + 2;

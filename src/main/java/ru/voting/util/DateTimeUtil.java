@@ -9,7 +9,7 @@ import java.time.LocalTime;
 import java.util.Properties;
 
 public class DateTimeUtil {
-    public static LocalTime BARRIER_TIME = getBarrierTime();
+    public static final LocalTime BARRIER_TIME = getBarrierTime();
 
     public static LocalDate ifNullThenNow(LocalDate localDate) {
         return localDate != null ? localDate : LocalDate.now();
