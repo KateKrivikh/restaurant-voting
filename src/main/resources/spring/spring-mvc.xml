@@ -6,9 +6,9 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:component-scan base-package="ru.voting.**.web"/>
+    <context:component-scan base-package="ru.graduation.voting.**.web"/>
 
-    <bean class="ru.voting.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
+    <bean class="ru.graduation.voting.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
 
     <mvc:annotation-driven>
         <mvc:message-converters>

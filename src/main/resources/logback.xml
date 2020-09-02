@@ -9,7 +9,7 @@
         </encoder>
     </appender>
 
-    <logger name="ru.voting" level="debug"/>
+    <logger name="ru.graduation.voting" level="debug"/>
 
     <root level="info">
         <appender-ref ref="console"/>

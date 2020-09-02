@@ -27,7 +27,7 @@
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           p:dataSource-ref="dataSource"
-          p:packagesToScan="ru.voting.**.model">
+          p:packagesToScan="ru.graduation.voting.**.model">
 
         <property name="jpaPropertyMap">
             <map>
@@ -41,8 +41,8 @@
                 <entry key="#{T(org.hibernate.cache.jcache.ConfigSettings).PROVIDER}" value="org.ehcache.jsr107.EhcacheCachingProvider"/>
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SECOND_LEVEL_CACHE}" value="true"/>
 
-                <entry key="javax.persistence.validation.group.pre-persist" value="ru.voting.View$Persist"/>
-                <entry key="javax.persistence.validation.group.pre-update" value="ru.voting.View$Persist"/>
+                <entry key="javax.persistence.validation.group.pre-persist" value="ru.graduation.voting.View$Persist"/>
+                <entry key="javax.persistence.validation.group.pre-update" value="ru.graduation.voting.View$Persist"/>
             </map>
         </property>
 

@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.graduation</groupId>
-    <artifactId>restaurant-voting</artifactId>
+    <artifactId>voting</artifactId>
     <packaging>war</packaging>
 
     <version>1.0-SNAPSHOT</version>
 
-    <name>Restaurant voting</name>
+    <name>Restaurant voting system</name>
 
     <properties>
         <java.version>14</java.version>
@@ -50,7 +50,7 @@
     </properties>
 
     <build>
-        <finalName>restaurant-voting</finalName>
+        <finalName>voting</finalName>
         <defaultGoal>package</defaultGoal>
         <plugins>
             <plugin>
