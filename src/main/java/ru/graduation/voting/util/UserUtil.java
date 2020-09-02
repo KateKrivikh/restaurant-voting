@@ -5,7 +5,11 @@ import org.springframework.util.StringUtils;
 import ru.graduation.voting.to.UserTo;
 import ru.graduation.voting.model.User;
 
-public class UserUtil {
+public final class UserUtil {
+
+    private UserUtil() {
+    }
+
     public static UserTo asTo(User user) {
         return new UserTo(user.getId(), user.getName(), user.getEmail(), user.getPassword());
     }

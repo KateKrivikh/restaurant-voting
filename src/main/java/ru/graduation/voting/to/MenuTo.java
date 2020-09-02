@@ -28,8 +28,12 @@ public class MenuTo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         MenuTo menuTo = (MenuTo) o;
         return restaurant.equals(menuTo.restaurant) &&
                 dishes.equals(menuTo.dishes);

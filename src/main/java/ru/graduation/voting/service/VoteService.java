@@ -19,7 +19,7 @@ import static ru.graduation.voting.util.ValidationUtil.*;
 
 @Service
 public class VoteService {
-    private static final Logger log = getLogger(VoteService.class);
+    private final Logger log = getLogger(VoteService.class);
 
     private final VoteRepository repository;
     private final RestaurantRepository restaurantRepository;

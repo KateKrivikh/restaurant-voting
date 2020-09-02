@@ -16,7 +16,7 @@ import static ru.graduation.voting.util.ValidationUtil.*;
 
 @Service
 public class RestaurantService {
-    private static final Logger log = getLogger(RestaurantService.class);
+    private final Logger log = getLogger(RestaurantService.class);
 
     private final RestaurantRepository repository;
 

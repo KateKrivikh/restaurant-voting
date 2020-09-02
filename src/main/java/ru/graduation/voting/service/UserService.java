@@ -23,7 +23,7 @@ import static ru.graduation.voting.util.ValidationUtil.*;
 @Service("userService")
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserService implements UserDetailsService {
-    private static final Logger log = getLogger(UserService.class);
+    private final Logger log = getLogger(UserService.class);
 
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;

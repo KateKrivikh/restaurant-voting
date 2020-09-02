@@ -26,7 +26,7 @@ import static ru.graduation.voting.util.exception.ErrorType.*;
 @RestControllerAdvice(annotations = RestController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
 public class ExceptionInfoHandler {
-    private static final Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
+    private final Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
     public static final String EXCEPTION_DUPLICATE_USER_EMAIL = "User with this email already exists";
     public static final String EXCEPTION_DUPLICATE_RESTAURANT_NAME = "Restaurant with this name already exists";

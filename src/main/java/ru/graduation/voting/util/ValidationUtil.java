@@ -10,7 +10,10 @@ import ru.graduation.voting.util.exception.TooLateException;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalTime;
 
-public class ValidationUtil {
+public final class ValidationUtil {
+
+    private ValidationUtil() {
+    }
 
     public static <T> T checkNotFoundWithId(T object, int id) {
         checkNotFoundWithId(object != null, id);
@@ -47,8 +50,9 @@ public class ValidationUtil {
     }
 
     public static void checkTime(LocalTime barrierTime) {
-        if (LocalTime.now().isAfter(barrierTime))
+        if (LocalTime.now().isAfter(barrierTime)) {
             throw new TooLateException();
+        }
     }
 
     //  http://stackoverflow.com/a/28565320/548473

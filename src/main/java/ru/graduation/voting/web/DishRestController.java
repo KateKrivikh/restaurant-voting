@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = DishRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DishRestController {
-    static final String REST_URL = "/rest/admin/restaurants/{restaurant_id}/dishes";
+    static final String REST_URL = "/rest/admin/restaurants/{restaurantId}/dishes";
 
     private final DishService service;
 
@@ -28,31 +28,31 @@ public class DishRestController {
     }
 
     @GetMapping
-    public List<Dish> getAll(@PathVariable int restaurant_id,
+    public List<Dish> getAll(@PathVariable int restaurantId,
                              @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return service.getAll(restaurant_id, date);
+        return service.getAll(restaurantId, date);
     }
 
     @GetMapping("/{id}")
-    public Dish get(@PathVariable int restaurant_id, @PathVariable int id) {
-        return service.get(id, restaurant_id);
+    public Dish get(@PathVariable int restaurantId, @PathVariable int id) {
+        return service.get(id, restaurantId);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int restaurant_id, @PathVariable int id) {
-        service.delete(id, restaurant_id);
+    public void delete(@PathVariable int restaurantId, @PathVariable int id) {
+        service.delete(id, restaurantId);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@Validated(View.Rest.class) @RequestBody Dish dish, @PathVariable int restaurant_id, @PathVariable int id) {
-        service.update(dish, id, restaurant_id);
+    public void update(@Validated(View.Rest.class) @RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int id) {
+        service.update(dish, id, restaurantId);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createWithLocation(@Validated(View.Rest.class) @RequestBody Dish dish, @PathVariable int restaurant_id) {
-        Dish created = service.create(dish, restaurant_id);
+    public ResponseEntity<Dish> createWithLocation(@Validated(View.Rest.class) @RequestBody Dish dish, @PathVariable int restaurantId) {
+        Dish created = service.create(dish, restaurantId);
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")

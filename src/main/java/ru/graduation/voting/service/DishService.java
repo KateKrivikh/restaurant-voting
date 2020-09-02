@@ -21,7 +21,7 @@ import static ru.graduation.voting.util.ValidationUtil.*;
 
 @Service
 public class DishService {
-    private static final Logger log = getLogger(DishService.class);
+    private final Logger log = getLogger(DishService.class);
 
     private final DishRepository repository;
 
