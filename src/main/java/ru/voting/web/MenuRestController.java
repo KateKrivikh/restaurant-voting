@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.voting.service.DishService;
+import ru.voting.service.MenuService;
 import ru.voting.to.MenuTo;
 
 import java.time.LocalDate;
@@ -18,9 +18,9 @@ import java.util.List;
 public class MenuRestController {
     static final String REST_URL = "/rest/menu";
 
-    private final DishService service;
+    private final MenuService service;
 
-    public MenuRestController(DishService service) {
+    public MenuRestController(MenuService service) {
         this.service = service;
     }
 

@@ -2,6 +2,8 @@ package ru.voting.service;
 
 import org.slf4j.Logger;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.voting.model.Restaurant;
@@ -27,12 +29,18 @@ public class RestaurantService {
         return repository.getAll();
     }
 
+    @Cacheable(value = "restaurant", key = "#id")
     public Restaurant get(int id) {
         log.info("get {}", id);
         return checkNotFoundWithId(repository.get(id), id);
     }
 
-    @CacheEvict(value = "menu", allEntries = true)
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "restaurant", key = "#id"),
+                    @CacheEvict(value = "menu", allEntries = true)
+            }
+    )
     public void delete(int id) {
         log.info("delete {}", id);
         checkNotFoundWithId(repository.delete(id), id);
@@ -45,7 +53,12 @@ public class RestaurantService {
         return repository.save(restaurant);
     }
 
-    @CacheEvict(value = "menu", allEntries = true)
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "restaurant", key = "#id"),
+                    @CacheEvict(value = "menu", allEntries = true)
+            }
+    )
     public void update(Restaurant restaurant, int id) {
         assureIdConsistent(restaurant, id);
         log.info("update {}", restaurant);

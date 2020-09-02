@@ -108,14 +108,8 @@ class DishServiceTest {
     }
 
     @Test
-    void getMenuToday() {
-        List<MenuTo> actual = service.getMenu(null);
-        MENU_MATCHER.assertMatch(actual, List.of());
-    }
-
-    @Test
     void getMenuByDate() {
-        List<MenuTo> actual = service.getMenu(DATE);
+        List<MenuTo> actual = service.getMenuByDate(DATE);
         MENU_MATCHER.assertMatch(actual, MENU);
     }
 }

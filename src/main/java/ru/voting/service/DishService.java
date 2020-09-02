@@ -61,10 +61,6 @@ public class DishService {
         checkNotFoundWithId(repository.save(dish, restaurantId), dish.id());
     }
 
-    public List<MenuTo> getMenu(@Nullable LocalDate date) {
-        return getMenuByDate(ifNullThenNow(date));
-    }
-
     @Cacheable(value = "menu", key = "#date")
     public List<MenuTo> getMenuByDate(@NotNull LocalDate date) {
         log.info("get menu by date {}", date);
