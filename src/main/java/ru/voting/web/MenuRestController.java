@@ -1,6 +1,5 @@
 package ru.voting.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
@@ -19,8 +18,11 @@ import java.util.List;
 public class MenuRestController {
     static final String REST_URL = "/rest/menu";
 
-    @Autowired
-    private DishService service;
+    private final DishService service;
+
+    public MenuRestController(DishService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public List<MenuTo> getAll(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {

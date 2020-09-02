@@ -1,6 +1,5 @@
 package ru.voting.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,8 +19,11 @@ import java.net.URI;
 public class VoteRestController {
     static final String REST_URL = "/rest/votes";
 
-    @Autowired
-    private VoteService service;
+    private final VoteService service;
+
+    public VoteRestController(VoteService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ResponseEntity<Vote> createWithLocation(@RequestParam int restaurantId, @AuthenticationPrincipal AuthorizedUser authUser) {

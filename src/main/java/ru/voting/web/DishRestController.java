@@ -1,6 +1,5 @@
 package ru.voting.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,8 +21,11 @@ import java.util.List;
 public class DishRestController {
     static final String REST_URL = "/rest/admin/restaurants/{restaurant_id}/dishes";
 
-    @Autowired
-    private DishService service;
+    private final DishService service;
+
+    public DishRestController(DishService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public List<Dish> getAll(@PathVariable int restaurant_id,

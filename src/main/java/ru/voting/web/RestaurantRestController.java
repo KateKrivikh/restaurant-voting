@@ -1,6 +1,5 @@
 package ru.voting.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +18,11 @@ import java.util.List;
 public class RestaurantRestController {
     static final String REST_URL = "/rest/admin/restaurants";
 
-    @Autowired
-    private RestaurantService service;
+    private final RestaurantService service;
+
+    public RestaurantRestController(RestaurantService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public List<Restaurant> getAll() {
