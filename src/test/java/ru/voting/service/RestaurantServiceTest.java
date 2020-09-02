@@ -2,8 +2,6 @@ package ru.voting.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
-import org.springframework.transaction.annotation.Transactional;
 import ru.voting.model.Restaurant;
 import ru.voting.util.exception.IllegalRequestDataException;
 import ru.voting.util.exception.NotFoundException;
@@ -13,12 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.voting.RestaurantTestData.*;
 
-@SpringJUnitWebConfig(locations = {
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
-@Transactional
-class RestaurantServiceTest {
+class RestaurantServiceTest extends AbstractServiceTest {
 
     @Autowired
     private RestaurantService service;
