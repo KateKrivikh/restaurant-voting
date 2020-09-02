@@ -2,12 +2,13 @@ package ru.voting.model;
 
 import org.hibernate.Hibernate;
 import org.springframework.util.Assert;
+import ru.voting.HasId;
 
 import javax.persistence.*;
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
-public abstract class AbstractBaseEntity {
+public abstract class AbstractBaseEntity implements HasId {
     public static final int START_SEQ = 100000;
 
     @Id
@@ -22,18 +23,17 @@ public abstract class AbstractBaseEntity {
         this.id = id;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
 
-    public boolean isNew() {
-        return getId() == null;
-    }
-
+    @Override
     // doesn't work for hibernate lazy proxy
     public int id() {
         Assert.notNull(id, "Entity must has id");

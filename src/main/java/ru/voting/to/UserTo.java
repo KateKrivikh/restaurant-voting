@@ -1,10 +1,10 @@
 package ru.voting.to;
 
-import org.springframework.util.Assert;
+import ru.voting.HasId;
 
 import java.io.Serializable;
 
-public class UserTo implements Serializable {
+public class UserTo implements Serializable, HasId {
     private static final long serialVersionUID = 1L;
 
     protected Integer id;
@@ -25,10 +25,12 @@ public class UserTo implements Serializable {
         this.password = password;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }
@@ -55,16 +57,6 @@ public class UserTo implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean isNew() {
-        return getId() == null;
-    }
-
-    // doesn't work for hibernate lazy proxy
-    public int id() {
-        Assert.notNull(getId(), "Entity must has id");
-        return getId();
     }
 
     @Override
