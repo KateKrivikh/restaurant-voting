@@ -12,6 +12,10 @@ Voting system for deciding where to have lunch.
 
 Each restaurant provides a new menu each day.
 
+# Curl samples 
+Application deployed at application context `voting`.
+> For windows use `Git Bash`
+
 ## Admin options:
 #### Restaurants
 ###### 1. Get all:
@@ -54,7 +58,17 @@ Each restaurant provides a new menu each day.
 ---
 
 ## User options:
-###### 1. Get menu:
+###### 1. Get menu today:
+`curl -s http://localhost:8080/voting/rest/menu --user user@gmail.com:user`
+###### 2. Get menu on date:
 `curl -s http://localhost:8080/voting/rest/menu?date=2020-08-20 --user user@gmail.com:user`
-###### 2. Vote for a restaurant:
+###### 3. Vote for a restaurant:
 `curl -s http://localhost:8080/voting/rest/votes?restaurantId=100002 -X POST --user user@gmail.com:user`
+
+---
+#### Validation examples:
+`curl -s http://localhost:8080/voting/rest/admin/users -X POST -H "Content-Type: application/json" -d '{}' --user admin@gmail.com:admin`
+
+`curl -s http://localhost:8080/voting/rest/admin/users/100003 --user admin@gmail.com:admin`
+
+`curl -s http://localhost:8080/voting/rest/votes -X POST --user user@gmail.com:user`
