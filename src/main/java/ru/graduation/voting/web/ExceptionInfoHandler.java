@@ -35,9 +35,9 @@ public class ExceptionInfoHandler {
 
     private static final Map<String, String> CONSTRAINS_MAP = Map.of(
             "users_unique_email_idx", EXCEPTION_DUPLICATE_USER_EMAIL,
-            "restaurants_unique_name_idx", EXCEPTION_DUPLICATE_RESTAURANT_NAME,
-            "dishes_unique_date_restaurant_name_idx", EXCEPTION_DUPLICATE_DISH,
-            "votes_unique_date_user_idx", EXCEPTION_DUPLICATE_VOTE);
+            "restaurant_unique_name_idx", EXCEPTION_DUPLICATE_RESTAURANT_NAME,
+            "dish_unique_date_restaurant_name_idx", EXCEPTION_DUPLICATE_DISH,
+            "vote_unique_date_user_idx", EXCEPTION_DUPLICATE_VOTE);
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
