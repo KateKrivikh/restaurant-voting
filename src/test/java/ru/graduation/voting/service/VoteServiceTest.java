@@ -12,7 +12,7 @@ import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.graduation.voting.DishTestData.DATE;
-import static ru.graduation.voting.DishTestData.DATE_NOW;
+import static ru.graduation.voting.DishTestData.DATE_TODAY;
 import static ru.graduation.voting.RestaurantTestData.RESTAURANT_1_ID;
 import static ru.graduation.voting.UserTestData.USER_ID;
 import static ru.graduation.voting.VoteTestData.*;
@@ -87,7 +87,7 @@ class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     void getByUserAndDateNotFound() {
-        assertThrows(NotFoundException.class, () -> service.getByUserAndDate(USER_ID, DATE_NOW));
+        assertThrows(NotFoundException.class, () -> service.getByUserAndDate(USER_ID, DATE_TODAY));
     }
 
     @Test

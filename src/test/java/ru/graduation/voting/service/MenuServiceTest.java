@@ -16,12 +16,12 @@ class MenuServiceTest extends AbstractServiceTest {
     @Test
     void getMenuToday() {
         List<MenuTo> actual = service.getMenu(null);
-        MENU_MATCHER.assertMatch(actual, List.of());
+        MENU_MATCHER.assertMatch(actual, MENU);
     }
 
     @Test
     void getMenuByDate() {
         List<MenuTo> actual = service.getMenu(DATE);
-        MENU_MATCHER.assertMatch(actual, MENU);
+        MENU_MATCHER.assertMatch(actual, MENU_DATE);
     }
 }

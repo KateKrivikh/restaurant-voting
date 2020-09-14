@@ -21,13 +21,13 @@ VALUES ('Tkemali'),
        ('Megobari');
 
 INSERT INTO dish (restaurant_id, dish_date, name, price)
-VALUES (100002, '2020-08-20', 'Chicken, lamb or veal kebab', 620),
-       (100002, '2020-08-20', 'Ojakhuri (roasted veal with potatoes served with tkemali sauce)', 650),
-       (100002, '2020-08-20', 'Khinkali with lamb', 320),
-       (100003, '2020-08-20', 'Ajapsandali', 450),
-       (100003, '2020-08-20', 'Chicken Satsivi', 470),
-       (100003, '2020-08-20', 'Eggplant roll with walnut and spices', 460);
+VALUES (100002, now(), 'Chicken, lamb or veal kebab', 620),
+       (100002, now(), 'Ojakhuri (roasted veal with potatoes served with tkemali sauce)', 650),
+       (100002, now(), 'Khinkali with lamb', 320),
+       (100003, now(), 'Ajapsandali', 450),
+       (100003, now(), 'Chicken Satsivi', 470),
+       (100002, '2020-08-20', 'Eggplant roll with walnut and spices', 460);
 
 INSERT INTO vote (vote_date, user_id, restaurant_id)
-VALUES ('2020-08-20', 100000, 100003),
-       ('2020-08-20', 100001, 100003)
+VALUES ('2020-08-20', 100000, 100002),
+       ('2020-08-20', 100001, 100002)

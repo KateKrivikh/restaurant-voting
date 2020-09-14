@@ -40,7 +40,7 @@ class DishRestControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DISH_MATCHER.contentJson());
+                .andExpect(DISH_MATCHER.contentJson(DISH_1, DISH_3, DISH_2));
     }
 
     @Test
@@ -51,7 +51,7 @@ class DishRestControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DISH_MATCHER.contentJson(DISH_1, DISH_3, DISH_2));
+                .andExpect(DISH_MATCHER.contentJson(DISH_6));
     }
 
     @Test

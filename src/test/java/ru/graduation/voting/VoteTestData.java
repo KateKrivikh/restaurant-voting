@@ -3,7 +3,7 @@ package ru.graduation.voting;
 import ru.graduation.voting.model.Vote;
 
 import static ru.graduation.voting.DishTestData.DATE;
-import static ru.graduation.voting.DishTestData.DATE_NOW;
+import static ru.graduation.voting.DishTestData.DATE_TODAY;
 import static ru.graduation.voting.RestaurantTestData.RESTAURANT_1_ID;
 import static ru.graduation.voting.RestaurantTestData.RESTAURANT_2;
 import static ru.graduation.voting.UserTestData.ADMIN_ID;
@@ -16,11 +16,11 @@ public class VoteTestData {
     public static final int NOT_FOUND = 10;
     public static final int VOTE_1_ID = START_SEQ + 10;
 
-    public static final Vote VOTE_1 = new Vote(VOTE_1_ID, DATE, USER_ID, RESTAURANT_2.id());
-    public static final Vote VOTE_2 = new Vote(VOTE_1_ID + 1, DATE, ADMIN_ID, RESTAURANT_2.id());
+    public static final Vote VOTE_1 = new Vote(VOTE_1_ID, DATE, USER_ID, RESTAURANT_1_ID);
+    public static final Vote VOTE_2 = new Vote(VOTE_1_ID + 1, DATE, ADMIN_ID, RESTAURANT_1_ID);
 
     public static Vote getNew() {
-        return new Vote(null, DATE_NOW, USER_ID, RESTAURANT_2.id());
+        return new Vote(null, DATE_TODAY, USER_ID, RESTAURANT_2.id());
     }
 
     public static Vote getUpdated() {

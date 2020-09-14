@@ -37,7 +37,7 @@ Application deployed at application context `voting`.
 ###### 3. Add new:
 `curl -s http://localhost:8080/voting/rest/admin/restaurants/100002/dishes -X POST -H "Content-Type: application/json" -d '{"date":"2020-08-20","name":"Potato soup","price":100}' --user admin@gmail.com:admin`
 ###### 4. Update existing:
-`curl -s http://localhost:8080/voting/rest/admin/restaurants/100002/dishes/100004 -X PUT -H "Content-Type: application/json" -d '{"id":100004,"date":"2020-08-20","name":"Chicken, lamb or veal kebab","price":630}' --user admin@gmail.com:admin`
+`curl -s http://localhost:8080/voting/rest/admin/restaurants/100002/dishes/100009 -X PUT -H "Content-Type: application/json" -d '{"id":100009,"date":"2020-08-20","name":"Eggplant roll with walnut and spices","price":450}' --user admin@gmail.com:admin`
 ###### 5. Remove existing:
 `curl -s http://localhost:8080/voting/rest/admin/restaurants/100002/dishes/100005 -X DELETE --user admin@gmail.com:admin` 
 

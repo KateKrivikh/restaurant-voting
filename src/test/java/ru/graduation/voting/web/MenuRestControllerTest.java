@@ -4,13 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.List;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.graduation.voting.DishTestData.MENU;
-import static ru.graduation.voting.DishTestData.MENU_MATCHER;
+import static ru.graduation.voting.DishTestData.*;
 import static ru.graduation.voting.TestUtil.userHttpBasic;
 import static ru.graduation.voting.UserTestData.USER;
 
@@ -24,7 +21,7 @@ class MenuRestControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MENU_MATCHER.contentJson(List.of()));
+                .andExpect(MENU_MATCHER.contentJson(MENU));
     }
 
     @Test
@@ -35,7 +32,7 @@ class MenuRestControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MENU_MATCHER.contentJson(MENU));
+                .andExpect(MENU_MATCHER.contentJson(MENU_DATE));
     }
 
     @Test
