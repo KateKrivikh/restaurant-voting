@@ -63,7 +63,7 @@ Application deployed at application context `voting`.
 ###### 2. Get menu on date:
 `curl -s http://localhost:8080/voting/rest/menu?date=2020-08-20 --user user@gmail.com:user`
 ###### 3. Vote for a restaurant:
-`curl -s http://localhost:8080/voting/rest/votes?restaurantId=100002 -X POST --user user@gmail.com:user`
+`curl -s http://localhost:8080/voting/rest/votes?restaurantId=100002 -X PUT --user user@gmail.com:user`
 
 ---
 #### Validation examples:
@@ -71,4 +71,4 @@ Application deployed at application context `voting`.
 
 `curl -s http://localhost:8080/voting/rest/admin/users/100003 --user admin@gmail.com:admin`
 
-`curl -s http://localhost:8080/voting/rest/votes -X POST --user user@gmail.com:user`
+`curl -s http://localhost:8080/voting/rest/votes -X PUT --user user@gmail.com:user`

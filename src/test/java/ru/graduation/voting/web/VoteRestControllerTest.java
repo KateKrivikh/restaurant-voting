@@ -2,8 +2,6 @@ package ru.graduation.voting.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.graduation.voting.RestaurantTestData;
 import ru.graduation.voting.model.Vote;
@@ -12,7 +10,6 @@ import ru.graduation.voting.service.VoteService;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.graduation.voting.RestaurantTestData.RESTAURANT_1_ID;
 import static ru.graduation.voting.RestaurantTestData.RESTAURANT_2;
-import static ru.graduation.voting.TestUtil.readFromJson;
 import static ru.graduation.voting.TestUtil.userHttpBasic;
 import static ru.graduation.voting.UserTestData.USER;
 import static ru.graduation.voting.VoteTestData.VOTE_MATCHER;
@@ -25,69 +22,63 @@ class VoteRestControllerTest extends AbstractRestControllerTest {
     private VoteService service;
 
     @Test
-    void createWithLocation() throws Exception {
+    void voteFirstTime() throws Exception {
         Vote newVote = getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .param("restaurantId", String.valueOf(RESTAURANT_2.id()))
-                .with(userHttpBasic(USER))
-                .contentType(MediaType.APPLICATION_JSON));
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isNoContent());
 
-        Vote created = readFromJson(action, Vote.class);
-        int newId = created.id();
-        newVote.setId(newId);
+        Vote created = service.getByUserAndDate(newVote.getUserId(), newVote.getDate());
+        newVote.setId(created.id());
         VOTE_MATCHER.assertMatch(created, newVote);
-        VOTE_MATCHER.assertMatch(service.get(newId), newVote);
     }
 
     @Test
-    void createRestaurantNotFound() throws Exception {
+    void voteFirstTimeRestaurantNotFound() throws Exception {
         Vote newVote = getNew();
         newVote.setRestaurantId(RestaurantTestData.NOT_FOUND);
-        perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .param("restaurantId", String.valueOf(RestaurantTestData.NOT_FOUND))
-                .with(userHttpBasic(USER))
-                .contentType(MediaType.APPLICATION_JSON))
+                .with(userHttpBasic(USER)))
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
-    void updateBeforeBarrier() throws Exception {
+    void voteSecondTimeBeforeBarrier() throws Exception {
         Vote newVote = getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .param("restaurantId", String.valueOf(RESTAURANT_2.id()))
-                .with(userHttpBasic(USER))
-                .contentType(MediaType.APPLICATION_JSON));
-        Vote created = readFromJson(action, Vote.class);
-        int newId = created.id();
-        newVote.setId(newId);
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isNoContent());
+        Vote created = service.getByUserAndDate(newVote.getUserId(), newVote.getDate());
+        newVote.setId(created.id());
 
         newVote.setRestaurantId(RESTAURANT_1_ID);
-        ResultActions actionUpdate = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .param("restaurantId", String.valueOf(RESTAURANT_1_ID))
-                .with(userHttpBasic(USER))
-                .contentType(MediaType.APPLICATION_JSON));
-        Vote updated = readFromJson(actionUpdate, Vote.class);
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isNoContent());
+        Vote updated = service.getByUserAndDate(newVote.getUserId(), newVote.getDate());
 
         VOTE_MATCHER.assertMatch(updated, newVote);
         VOTE_MATCHER.assertMatch(service.get(newVote.id()), newVote);
     }
 
     @Test
-    void updateBeforeBarrierRestaurantNotFound() throws Exception {
+    void voteSecondTimeBeforeBarrierRestaurantNotFound() throws Exception {
         Vote newVote = getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .param("restaurantId", String.valueOf(RESTAURANT_2.id()))
-                .with(userHttpBasic(USER))
-                .contentType(MediaType.APPLICATION_JSON));
-        Vote created = readFromJson(action, Vote.class);
-        int newId = created.id();
-        newVote.setId(newId);
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isNoContent());
+        Vote created = service.getByUserAndDate(newVote.getUserId(), newVote.getDate());
+        newVote.setId(created.id());
 
         newVote.setRestaurantId(RestaurantTestData.NOT_FOUND);
-        perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .param("restaurantId", String.valueOf(RestaurantTestData.NOT_FOUND))
-                .with(userHttpBasic(USER))
-                .contentType(MediaType.APPLICATION_JSON))
+                .with(userHttpBasic(USER)))
                 .andExpect(status().isUnprocessableEntity());
     }
 

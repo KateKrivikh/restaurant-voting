@@ -1,21 +1,13 @@
 package ru.graduation.voting.web;
 
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.*;
 import ru.graduation.voting.AuthorizedUser;
-import ru.graduation.voting.model.Vote;
 import ru.graduation.voting.service.VoteService;
 
-import java.net.URI;
-
 @RestController
-@RequestMapping(value = VoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = VoteRestController.REST_URL)
 public class VoteRestController {
     static final String REST_URL = "/rest/votes";
 
@@ -25,14 +17,9 @@ public class VoteRestController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<Vote> createWithLocation(@RequestParam int restaurantId, @AuthenticationPrincipal AuthorizedUser authUser) {
-        Vote created = service.vote(authUser.getId(), restaurantId);
-
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{id}")
-                .buildAndExpand(created.getId()).toUri();
-
-        return ResponseEntity.created(uriOfNewResource).body(created);
+    @PutMapping
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void update(@RequestParam int restaurantId, @AuthenticationPrincipal AuthorizedUser authUser) {
+        service.vote(authUser.getId(), restaurantId);
     }
 }
