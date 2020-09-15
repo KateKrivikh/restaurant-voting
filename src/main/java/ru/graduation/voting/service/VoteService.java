@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.graduation.voting.model.Vote;
 import ru.graduation.voting.repository.CrudVoteRepository;
-import ru.graduation.voting.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -68,15 +67,15 @@ public class VoteService {
         LocalDate date = ifNullThenNow(null);
         log.info("vote user {} on date {} for restaurant {}", userId, date, restaurantId);
 
-        try {
-            Vote vote = getByUserAndDate(userId, date);
+        Vote vote = repository.getByUserAndDate(userId, date);
+        if (vote == null) {
+            vote = new Vote(null, date, userId, restaurantId);
+            return create(vote);
+        } else {
             checkTime(barrierTime);
             vote.setRestaurantId(restaurantId);
             update(vote, vote.id());
             return vote;
-        } catch (NotFoundException e) {
-            Vote vote = new Vote(null, date, userId, restaurantId);
-            return create(vote);
         }
     }
 }
