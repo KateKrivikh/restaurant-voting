@@ -9,11 +9,14 @@
         <heap>30</heap>
     </cache-template>
 
-    <cache-template name="singleNonExpiryCache">
-        <heap>1</heap>
+    <cache-template name="pluralExpiryCache">
+        <expiry>
+            <ttl unit="minutes">30</ttl>
+        </expiry>
+        <heap>100</heap>
     </cache-template>
 
-    <cache alias="users" uses-template="singleNonExpiryCache"/>
     <cache alias="menu" uses-template="pluralNonExpiryCache"/>
     <cache alias="restaurant" uses-template="pluralNonExpiryCache"/>
+    <cache alias="userByEmail" uses-template="pluralExpiryCache"/>
 </config>

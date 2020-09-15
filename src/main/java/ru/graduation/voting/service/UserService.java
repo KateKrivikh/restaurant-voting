@@ -1,6 +1,7 @@
 package ru.graduation.voting.service;
 
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Scope;
@@ -31,12 +32,14 @@ public class UserService implements UserDetailsService {
     private final CrudUserRepository repository;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserService service;
+
     public UserService(CrudUserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Cacheable("users")
     public List<User> getAll() {
         log.info("getAll");
         return repository.findAll(SORT_NAME_EMAIL);
@@ -47,20 +50,20 @@ public class UserService implements UserDetailsService {
         return checkNotFoundWithId(repository.getById(id), id);
     }
 
+    @Cacheable(value = "userByEmail", key = "#email")
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
         Assert.notNull(email, "email must not be null");
         return checkNotFound(repository.getByEmail(email), "email=" + email);
     }
 
-    @CacheEvict(value = "users", allEntries = true)
+    @CacheEvict(value = "userByEmail", allEntries = true)
     public void delete(int id) {
         log.info("delete {}", id);
         checkNotFoundWithId(repository.delete(id) != 0, id);
     }
 
     @Transactional
-    @CacheEvict(value = "users", allEntries = true)
     public User create(User user) {
         checkNew(user);
         log.info("create {}", user);
@@ -69,7 +72,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    @CacheEvict(value = "users", allEntries = true)
+    @CacheEvict(value = "userByEmail", allEntries = true)
     public void update(User user, int id) {
         assureIdConsistent(user, id);
         log.info("update {} with id={}", user, id);
@@ -80,7 +83,7 @@ public class UserService implements UserDetailsService {
     @Override
     public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {
         log.info("load user by email {}", email);
-        User user = repository.getByEmail(email.toLowerCase());
+        User user = service.getByEmail(email.toLowerCase());
         if (user == null) {
             throw new UsernameNotFoundException("User " + email + " is not found");
         }
