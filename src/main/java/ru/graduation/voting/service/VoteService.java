@@ -31,7 +31,7 @@ public class VoteService {
 
     public Vote get(int id) {
         log.info("get {}", id);
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found vote with id=" + id));
+        return checkNotFoundWithId(repository.getById(id), id);
     }
 
     @Transactional

@@ -27,6 +27,7 @@ public class UserTestData {
     public static User getUpdated() {
         User updated = new User(USER_ID, USER.getName(), USER.getEmail(), USER.getPassword(), USER.getRoles());
         updated.setName("UpdatedName");
+        updated.setEmail("new_email@gmail.com");
         updated.setRoles(Collections.singletonList(Role.ADMIN));
         return updated;
     }

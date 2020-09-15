@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.graduation.voting.model.Restaurant;
 import ru.graduation.voting.repository.CrudRestaurantRepository;
-import ru.graduation.voting.util.exception.NotFoundException;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class RestaurantService {
     @Cacheable(value = "restaurant", key = "#id")
     public Restaurant get(int id) {
         log.info("get {}", id);
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found restaurant with id=" + id));
+        return checkNotFoundWithId(repository.getById(id), id);
     }
 
     @Caching(

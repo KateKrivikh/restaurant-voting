@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 @Transactional(readOnly = true)
 public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
+    Vote getById(int id);
 
     @Query("SELECT v FROM Vote v WHERE v.userId = :userId AND v.date = :date")
     Vote getByUserAndDate(@Param("userId") int userId, @Param("date") LocalDate date);

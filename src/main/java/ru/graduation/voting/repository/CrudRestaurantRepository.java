@@ -9,6 +9,8 @@ import ru.graduation.voting.model.Restaurant;
 
 @Transactional(readOnly = true)
 public interface CrudRestaurantRepository extends JpaRepository<Restaurant, Integer> {
+    Restaurant getById(int id);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM Restaurant r WHERE r.id=:id")

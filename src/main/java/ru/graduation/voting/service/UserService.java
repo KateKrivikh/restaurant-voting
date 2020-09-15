@@ -15,7 +15,6 @@ import org.springframework.util.Assert;
 import ru.graduation.voting.AuthorizedUser;
 import ru.graduation.voting.model.User;
 import ru.graduation.voting.repository.CrudUserRepository;
-import ru.graduation.voting.util.exception.NotFoundException;
 
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class UserService implements UserDetailsService {
 
     public User get(int id) {
         log.info("get {}", id);
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found user with id=" + id));
+        return checkNotFoundWithId(repository.getById(id), id);
     }
 
     public User getByEmail(String email) {
