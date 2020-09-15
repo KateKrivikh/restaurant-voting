@@ -3,7 +3,6 @@ package ru.graduation.voting.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.graduation.voting.model.Dish;
-import ru.graduation.voting.to.MenuTo;
 import ru.graduation.voting.util.exception.IllegalRequestDataException;
 import ru.graduation.voting.util.exception.NotFoundException;
 
@@ -98,11 +97,5 @@ class DishServiceTest extends AbstractServiceTest {
         Dish updated = getUpdated();
         updated.setId(DISH_4.id());
         assertThrows(NotFoundException.class, () -> service.update(updated, updated.id(), RESTAURANT_1_ID));
-    }
-
-    @Test
-    void getMenuByDate() {
-        List<MenuTo> actual = service.getMenuByDate(DATE_TODAY);
-        MENU_MATCHER.assertMatch(actual, MENU);
     }
 }
