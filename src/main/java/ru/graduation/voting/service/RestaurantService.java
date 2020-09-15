@@ -4,10 +4,13 @@ import org.slf4j.Logger;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.graduation.voting.model.Restaurant;
-import ru.graduation.voting.repository.RestaurantRepository;
+import ru.graduation.voting.repository.CrudRestaurantRepository;
+import ru.graduation.voting.util.exception.NotFoundException;
 
 import java.util.List;
 
@@ -16,23 +19,25 @@ import static ru.graduation.voting.util.ValidationUtil.*;
 
 @Service
 public class RestaurantService {
+    private static final Sort SORT_NAME = Sort.by(Sort.Direction.ASC, "name");
+
     private final Logger log = getLogger(RestaurantService.class);
 
-    private final RestaurantRepository repository;
+    private final CrudRestaurantRepository repository;
 
-    public RestaurantService(RestaurantRepository repository) {
+    public RestaurantService(CrudRestaurantRepository repository) {
         this.repository = repository;
     }
 
     public List<Restaurant> getAll() {
         log.info("getAll");
-        return repository.getAll();
+        return repository.findAll(SORT_NAME);
     }
 
     @Cacheable(value = "restaurant", key = "#id")
     public Restaurant get(int id) {
         log.info("get {}", id);
-        return checkNotFoundWithId(repository.get(id), id);
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found restaurant with id=" + id));
     }
 
     @Caching(
@@ -43,9 +48,10 @@ public class RestaurantService {
     )
     public void delete(int id) {
         log.info("delete {}", id);
-        checkNotFoundWithId(repository.delete(id), id);
+        checkNotFoundWithId(repository.delete(id) != 0, id);
     }
 
+    @Transactional
     public Restaurant create(Restaurant restaurant) {
         checkNew(restaurant);
         log.info("create {}", restaurant);
@@ -53,6 +59,7 @@ public class RestaurantService {
         return repository.save(restaurant);
     }
 
+    @Transactional
     @Caching(
             evict = {
                     @CacheEvict(value = "restaurant", key = "#id"),

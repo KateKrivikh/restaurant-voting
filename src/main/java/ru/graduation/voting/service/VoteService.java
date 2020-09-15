@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.graduation.voting.model.Vote;
-import ru.graduation.voting.repository.RestaurantRepository;
 import ru.graduation.voting.repository.VoteRepository;
 import ru.graduation.voting.util.exception.NotFoundException;
 
@@ -22,11 +21,11 @@ public class VoteService {
     private final Logger log = getLogger(VoteService.class);
 
     private final VoteRepository repository;
-    private final RestaurantRepository restaurantRepository;
+    private final RestaurantService restaurantService;
 
-    public VoteService(VoteRepository repository, RestaurantRepository restaurantRepository) {
+    public VoteService(VoteRepository repository, RestaurantService restaurantService) {
         this.repository = repository;
-        this.restaurantRepository = restaurantRepository;
+        this.restaurantService = restaurantService;
     }
 
     public Vote get(int id) {
@@ -38,7 +37,8 @@ public class VoteService {
         checkNew(vote);
         log.info("create {}", vote);
         Assert.notNull(vote, "vote must not be null");
-        checkNotFoundWithId(restaurantRepository.get(vote.getRestaurantId()), vote.getRestaurantId());
+        // check if restaurant exists
+        restaurantService.get(vote.getRestaurantId());
         return repository.save(vote);
     }
 
@@ -46,7 +46,8 @@ public class VoteService {
         assureIdConsistent(vote, id);
         log.info("update {}", vote);
         Assert.notNull(vote, "vote must not be null");
-        checkNotFoundWithId(restaurantRepository.get(vote.getRestaurantId()), vote.getRestaurantId());
+        // check if restaurant exists
+        restaurantService.get(vote.getRestaurantId());
         checkNotFoundWithId(repository.save(vote), vote.id());
     }
 
