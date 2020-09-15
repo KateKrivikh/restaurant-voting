@@ -3,9 +3,10 @@ package ru.graduation.voting.service;
 import com.sun.istack.NotNull;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.graduation.voting.model.Vote;
-import ru.graduation.voting.repository.VoteRepository;
+import ru.graduation.voting.repository.CrudVoteRepository;
 import ru.graduation.voting.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -20,19 +21,20 @@ import static ru.graduation.voting.util.ValidationUtil.*;
 public class VoteService {
     private final Logger log = getLogger(VoteService.class);
 
-    private final VoteRepository repository;
+    private final CrudVoteRepository repository;
     private final RestaurantService restaurantService;
 
-    public VoteService(VoteRepository repository, RestaurantService restaurantService) {
+    public VoteService(CrudVoteRepository repository, RestaurantService restaurantService) {
         this.repository = repository;
         this.restaurantService = restaurantService;
     }
 
     public Vote get(int id) {
         log.info("get {}", id);
-        return checkNotFoundWithId(repository.get(id), id);
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found vote with id=" + id));
     }
 
+    @Transactional
     public Vote create(Vote vote) {
         checkNew(vote);
         log.info("create {}", vote);
@@ -42,6 +44,7 @@ public class VoteService {
         return repository.save(vote);
     }
 
+    @Transactional
     public void update(Vote vote, int id) {
         assureIdConsistent(vote, id);
         log.info("update {}", vote);
