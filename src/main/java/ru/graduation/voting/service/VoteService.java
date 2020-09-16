@@ -2,17 +2,18 @@ package ru.graduation.voting.service;
 
 import com.sun.istack.NotNull;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.graduation.voting.model.Vote;
 import ru.graduation.voting.repository.CrudVoteRepository;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.slf4j.LoggerFactory.getLogger;
-import static ru.graduation.voting.util.DateTimeUtil.BARRIER_TIME;
 import static ru.graduation.voting.util.DateTimeUtil.ifNullThenNow;
 import static ru.graduation.voting.util.ValidationUtil.*;
 
@@ -23,9 +24,22 @@ public class VoteService {
     private final CrudVoteRepository repository;
     private final RestaurantService restaurantService;
 
+    @Value("${time.hours}")
+    private String barrierTimeHours;
+
+    @Value("${time.minutes}")
+    private String barrierTimeMinutes;
+
+    private LocalTime barrierTime;
+
     public VoteService(CrudVoteRepository repository, RestaurantService restaurantService) {
         this.repository = repository;
         this.restaurantService = restaurantService;
+    }
+
+    @PostConstruct
+    public void setBarrierTime() {
+        barrierTime = LocalTime.of(Integer.parseInt(barrierTimeHours), Integer.parseInt(barrierTimeMinutes));
     }
 
     public Vote get(int id) {
@@ -60,7 +74,7 @@ public class VoteService {
     }
 
     public Vote vote(int userId, int restaurantId) {
-        return vote(userId, restaurantId, BARRIER_TIME);
+        return vote(userId, restaurantId, barrierTime);
     }
 
     public Vote vote(int userId, int restaurantId, @NotNull LocalTime barrierTime) {
