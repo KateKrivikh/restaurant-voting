@@ -9,7 +9,6 @@ import org.springframework.util.Assert;
 import ru.graduation.voting.model.Vote;
 import ru.graduation.voting.repository.CrudVoteRepository;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -24,22 +23,12 @@ public class VoteService {
     private final CrudVoteRepository repository;
     private final RestaurantService restaurantService;
 
-    @Value("${time.hours}")
-    private String barrierTimeHours;
-
-    @Value("${time.minutes}")
-    private String barrierTimeMinutes;
-
+    @Value("#{T(java.time.LocalTime).parse('${time}')}")
     private LocalTime barrierTime;
 
     public VoteService(CrudVoteRepository repository, RestaurantService restaurantService) {
         this.repository = repository;
         this.restaurantService = restaurantService;
-    }
-
-    @PostConstruct
-    public void setBarrierTime() {
-        barrierTime = LocalTime.of(Integer.parseInt(barrierTimeHours), Integer.parseInt(barrierTimeMinutes));
     }
 
     public Vote get(int id) {
